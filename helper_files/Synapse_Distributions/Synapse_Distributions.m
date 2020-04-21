@@ -19,7 +19,7 @@ function Synapse_Distributions(nl,clr,direction,alpha,draw_surface,synapse_index
 
 
     
-load Neuropil_Mesh.mat %Load neuropil mesh for skeletons
+load Neuropil_Mesh_Object.mat %Load neuropil mesh for skeletons
 
 for i = 1:length(nl)
     if isempty(nl(i).Inputs.treenodeID) == 0
@@ -53,17 +53,14 @@ xrot = 0;
 yrot = -1;
 zrot = -12;
 
-% NPM.v = rotate_pointsV2(NPM.v,zrot,3);
-% NPM.v = rotate_pointsV2(NPM.v,xrot,1);
-% NPM.v = rotate_pointsV2(NPM.v,yrot,2);
 
-Neuropil_mesh.vert = rotate_pointsV2(Neuropil_mesh.vert,zrot,3)
-Neuropil_mesh.vert = rotate_pointsV2(Neuropil_mesh.vert,xrot,1)
-Neuropil_mesh.vert = rotate_pointsV2(Neuropil_mesh.vert,yrot,2)
+NPM.vertices = rotate_points(NPM.vertices,zrot,3)
+NPM.vertices = rotate_points(NPM.vertices,xrot,1)
+NPM.vertices = rotate_points(NPM.vertices,yrot,2)
 
 %Find limits each set of axes
-axis_lims_MLDV = [min(Neuropil_mesh.vert(Neuropil_mesh.vert(:,3)> 105550 & Neuropil_mesh.vert(:,3)< 144000,1)), max(Neuropil_mesh.vert(Neuropil_mesh.vert(:,3)> 105550 & Neuropil_mesh.vert(:,3)< 144000,1)) , min(Neuropil_mesh.vert(Neuropil_mesh.vert(:,3)> 105550 & Neuropil_mesh.vert(:,3)< 144000,2)), max(Neuropil_mesh.vert(Neuropil_mesh.vert(:,3)> 105550 & Neuropil_mesh.vert(:,3)< 144000,2))];
-axis_lims_APDV = [min(Neuropil_mesh.vert(:,3)), max(Neuropil_mesh.vert(:,3)),min(Neuropil_mesh.vert(:,1)), max(Neuropil_mesh.vert(:,1))];
+axis_lims_MLDV = [min(NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,1)), max(NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,1)) , min(NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,2)), max(NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,2))];
+axis_lims_APDV = [min(NPM.vertices(:,3)), max(NPM.vertices(:,3)),min(NPM.vertices(:,1)), max(NPM.vertices(:,1))];
 
 
 
@@ -77,9 +74,9 @@ end
         % Rotate Coords
         if isempty(nl(i).Outputs.treenodeID) == 0
             Output_Coords = cat(1,Output{:});
-            Output_Coords = rotate_pointsV2(Output_Coords,zrot,3);
-            Output_Coords = rotate_pointsV2(Output_Coords,xrot,1);
-            Output_Coords = rotate_pointsV2(Output_Coords,yrot,2);
+            Output_Coords = rotate_points(Output_Coords,zrot,3);
+            Output_Coords = rotate_points(Output_Coords,xrot,1);
+            Output_Coords = rotate_points(Output_Coords,yrot,2);
 
 
             d = 'Presynaptic';
@@ -175,13 +172,13 @@ end
 if isempty(mldv_points_counts) == 0
     if nargin == 4
         subplot(3,7,[12,13,14,19,20,21])
-        Neuropil_mesh.vert = Neuropil_mesh.vert(:,[1,3,2]);
-        surfaces_v2(Neuropil_mesh,'k',.02,3,[])
+        NPM.vertices = NPM.vertices(:,[1,3,2]);
+        surfaces(NPM,'k',.02,3,[])
         %surfaces(NPM.v(:,[1,3,2]),'k',.02,'-');
     elseif draw_surface == 1
         subplot(3,7,[12,13,14,19,20,21])
-        Neuropil_mesh.vert = Neuropil_mesh.vert(:,[1,3,2]);
-        surfaces_v2(Neuropil_mesh,'k',.02,3,[])
+        NPM.vertices = NPM.vertices(:,[1,3,2]);
+        surfaces(NPM,'k',.02,3,[])
         %surfaces(NPM.v(:,[1,3,2]),'k',.02,'-');
 %         subplot(3,7,[2 3 4 9 10 11])
 %         surfaces([NPM.v(NPM.v(:,3)> 105550 & NPM.v(:,3)< 144000,1),NPM.v(NPM.v(:,3)> 105550 & NPM.v(:,3)< 144000,2)],'k',.05,'-')
