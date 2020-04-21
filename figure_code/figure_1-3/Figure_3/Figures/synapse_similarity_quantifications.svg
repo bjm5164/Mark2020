@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1029 359" style="enable-background:new 0 0 1029 359;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#262626;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:#262626;}
+	.st2{font-family:'HelveticaNeue-Roman';}
+	.st3{font-size:18px;}
+	.st4{font-size:19.8px;}
+	.st5{fill:none;stroke:#262626;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st6{opacity:0.75;}
+	.st7{fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st8{fill:none;stroke:#000000;stroke-width:0.5;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st9{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st10{fill:#0000FF;}
+	.st11{fill:#EC600C;}
+</style>
+<g>
+	<line class="st0" x1="134" y1="319.5" x2="931" y2="319.5"/>
+	<line class="st0" x1="243.3" y1="319.5" x2="243.3" y2="311.5"/>
+	<line class="st0" x1="436.1" y1="319.5" x2="436.1" y2="311.5"/>
+	<line class="st0" x1="628.9" y1="319.5" x2="628.9" y2="311.5"/>
+	<line class="st0" x1="821.7" y1="319.5" x2="821.7" y2="311.5"/>
+</g>
+<g transform="translate(243.2661,325.1)">
+	<text transform="matrix(1 0 0 1 -76 18)" class="st1 st2 st3">Dorsal Presynaptic</text>
+</g>
+<g transform="translate(436.0887,325.1)">
+	<text transform="matrix(1 0 0 1 -81 18)" class="st1 st2 st3">Dorsal Postsynaptic</text>
+</g>
+<g transform="translate(628.9113,325.1)">
+	<text transform="matrix(1 0 0 1 -78.4999 18)" class="st1 st2 st3">Ventral Presynaptic</text>
+</g>
+<g transform="translate(821.7339,325.1)">
+	<text transform="matrix(1 0 0 1 -83 18)" class="st1 st2 st3">Ventral Postsynaptic</text>
+</g>
+<g>
+	<line class="st0" x1="134" y1="319.5" x2="134" y2="27"/>
+	<line class="st0" x1="134" y1="319.5" x2="142" y2="319.5"/>
+	<line class="st0" x1="134" y1="246.4" x2="142" y2="246.4"/>
+	<line class="st0" x1="134" y1="173.2" x2="142" y2="173.2"/>
+	<line class="st0" x1="134" y1="100.1" x2="142" y2="100.1"/>
+	<line class="st0" x1="134" y1="27" x2="142" y2="27"/>
+</g>
+<g transform="translate(128.4,319.5)">
+	<text transform="matrix(1 0 0 1 -11 7)" class="st1 st2 st3">0</text>
+</g>
+<g transform="translate(128.4,246.375)">
+	<text transform="matrix(1 0 0 1 -26 7)" class="st1 st2 st3">0.1</text>
+</g>
+<g transform="translate(128.4,173.25)">
+	<text transform="matrix(1 0 0 1 -26 7)" class="st1 st2 st3">0.2</text>
+</g>
+<g transform="translate(128.4,100.125)">
+	<text transform="matrix(1 0 0 1 -26 7)" class="st1 st2 st3">0.3</text>
+</g>
+<g transform="translate(128.4,27)">
+	<text transform="matrix(1 0 0 1 -26 7)" class="st1 st2 st3">0.4</text>
+</g>
+<g transform="translate(99.9,173.2499) rotate(-90)">
+	<text transform="matrix(1 0 0 1 -81.5001 -5)" class="st1 st2 st4">Synapse Similarity</text>
+</g>
+<g>
+	<line class="st5" x1="134" y1="319.5" x2="931" y2="319.5"/>
+</g>
+<g class="st6">
+	<path d="M242.8,319.5v-58.3h-51.4v58.3H242.8z"/>
+</g>
+<g>
+	<path class="st7" d="M191.4,319.5v-58.3h51.4v58.3H191.4z"/>
+	<line class="st8" x1="217.1" y1="261.2" x2="217.1" y2="264.6"/>
+	<line class="st8" x1="217.1" y1="261.2" x2="217.1" y2="257.8"/>
+</g>
+<g transform="translate(211.129,264.5612)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(211.129,264.5612)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g transform="translate(211.129,257.8299)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(211.129,257.8299)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g class="st6">
+	<path class="st10" d="M295.1,319.5V114.1h-51.4v205.4H295.1z"/>
+</g>
+<g>
+	<path class="st7" d="M243.7,319.5V114.1h51.4v205.4H243.7z"/>
+	<line class="st8" x1="269.4" y1="114.1" x2="269.4" y2="124.1"/>
+	<line class="st8" x1="269.4" y1="114.1" x2="269.4" y2="104.2"/>
+</g>
+<g transform="translate(275.4032,124.0859)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(275.4032,124.0859)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+<g transform="translate(275.4032,104.1956)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(275.4032,104.1956)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+<g class="st6">
+	<path d="M435.7,319.5V142.9h-51.4v176.6H435.7z"/>
+</g>
+<g>
+	<path class="st7" d="M384.2,319.5V142.9h51.4v176.6H384.2z"/>
+	<line class="st8" x1="410" y1="142.9" x2="410" y2="146.9"/>
+	<line class="st8" x1="410" y1="142.9" x2="410" y2="138.9"/>
+</g>
+<g transform="translate(403.9516,146.8503)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(403.9516,146.8503)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g transform="translate(403.9516,138.869)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(403.9516,138.869)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g class="st6">
+	<path class="st11" d="M487.9,319.5V46.3h-51.4v273.2H487.9z"/>
+</g>
+<g>
+	<path class="st7" d="M436.5,319.5V46.3h51.4v273.2H436.5z"/>
+	<line class="st8" x1="462.2" y1="46.3" x2="462.2" y2="54.2"/>
+	<line class="st8" x1="462.2" y1="46.3" x2="462.2" y2="38.5"/>
+</g>
+<g transform="translate(468.2258,54.1575)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(468.2258,54.1575)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+<g transform="translate(468.2258,38.4731)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(468.2258,38.4731)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+<g class="st6">
+	<path d="M628.5,319.5v-44.7h-51.4v44.7H628.5z"/>
+</g>
+<g>
+	<path class="st7" d="M577.1,319.5v-44.7h51.4v44.7H577.1z"/>
+	<line class="st8" x1="602.8" y1="274.8" x2="602.8" y2="276.9"/>
+	<line class="st8" x1="602.8" y1="274.8" x2="602.8" y2="272.7"/>
+</g>
+<g transform="translate(596.7742,276.9184)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(596.7742,276.9184)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g transform="translate(596.7742,272.6845)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(596.7742,272.6845)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g class="st6">
+	<path class="st10" d="M680.8,319.5V160.8h-51.4v158.7H680.8z"/>
+</g>
+<g>
+	<path class="st7" d="M629.3,319.5V160.8h51.4v158.7H629.3z"/>
+	<line class="st8" x1="655" y1="160.8" x2="655" y2="169.7"/>
+	<line class="st8" x1="655" y1="160.8" x2="655" y2="151.9"/>
+</g>
+<g transform="translate(661.0484,169.7305)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(661.0484,169.7305)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+<g transform="translate(661.0484,151.8725)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(661.0484,151.8725)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+<g class="st6">
+	<path d="M821.3,319.5V180.2h-51.4v139.3H821.3z"/>
+</g>
+<g>
+	<path class="st7" d="M769.9,319.5V180.2h51.4v139.3H769.9z"/>
+	<line class="st8" x1="795.6" y1="180.2" x2="795.6" y2="182.8"/>
+	<line class="st8" x1="795.6" y1="180.2" x2="795.6" y2="177.6"/>
+</g>
+<g transform="translate(789.5968,182.8165)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(789.5968,182.8165)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g transform="translate(789.5968,177.6351)">
+	<path d="M3,0h6"/>
+</g>
+<g transform="translate(789.5968,177.6351)">
+	<path class="st9" d="M3,0h6"/>
+</g>
+<g class="st6">
+	<path class="st11" d="M873.6,319.5V113.2h-51.4v206.3H873.6z"/>
+</g>
+<g>
+	<path class="st7" d="M822.2,319.5V113.2h51.4v206.3H822.2z"/>
+	<line class="st8" x1="847.9" y1="113.2" x2="847.9" y2="119.9"/>
+	<line class="st8" x1="847.9" y1="113.2" x2="847.9" y2="106.5"/>
+</g>
+<g transform="translate(853.871,119.9049)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(853.871,119.9049)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+<g transform="translate(853.871,106.4884)">
+	<path d="M-9,0h6"/>
+</g>
+<g transform="translate(853.871,106.4884)">
+	<path class="st9" d="M-9,0h6"/>
+</g>
+</svg>

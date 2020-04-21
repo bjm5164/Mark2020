@@ -7,15 +7,15 @@ function [cohorts,t] = get_temporal_cohorts_by_cell_body(lineage,cutoff,bilatera
             soma_coords_l(i,:) = lineage(index_l(i)).Soma_Coords;
             soma_coords_r(i,:) = lineage(index_r(i)).Soma_Coords;
         end
-    if normalization == 1
-        npd_l = normalized_neurite_distance(lineage(index_l),1)
-        npd_r = normalized_neurite_distance(lineage(index_r),1)
-    else
-         npd_l = arrayfun(@(x) lineage(index_l(x)).skeleton_data.Distance_To_Neuropil,1:length(index_l)); %Get cortex neurite lengths
-         npd_r = arrayfun(@(x) lineage(index_r(x)).skeleton_data.Distance_To_Neuropil,1:length(index_r));
-    end
         
-        
+        if normalization == 1
+            npd_l = normalized_neurite_distance(lineage(index_l),1)
+            npd_r = normalized_neurite_distance(lineage(index_r),1)
+        else
+             npd_l = arrayfun(@(x) lineage(index_l(x)).skeleton_data.Distance_To_Neuropil,1:length(index_l)); %Get cortex neurite lengths
+             npd_r = arrayfun(@(x) lineage(index_r(x)).skeleton_data.Distance_To_Neuropil,1:length(index_r));
+        end
+           
         npd = .5*(npd_l+npd_r); % Get mean cortex neurite length
         npd_bi = zeros(length(npd)*2,1);
         npd_bi(index_l) = npd;
@@ -62,15 +62,15 @@ function [cohorts,t] = get_temporal_cohorts_by_cell_body(lineage,cutoff,bilatera
     for i = 1:length(lineage)
         cohorts(i) = c_edge(ismember(index,t(i))); %get temporal cohorts
     end
-    %map = cool(length([0:7000:28000])-1);
-%     figure; hold on
-%     for i = 1:max(c_edge)
-%         plot_neurons(lineage(cohorts(:)==i & an_l.DV_Index == 1),map(i,:),1,3,1,0)
-%     end
-%     view([190 90]);
-%     camlight ;
-%     axis off;
-%     set(gcf,'Color','w');
-%     xlim([.8e4,11e4])
-%     ylim([5.75e4,12e4])  
+    map = cool(4);
+    figure; hold on
+    for i = 1:max(c_edge)
+        plot_neurons(lineage(cohorts==i),map(i,:),1,3,1,0)
+    end
+    view([190 90]);
+    camlight ;
+    axis off;
+    set(gcf,'Color','w');
+    xlim([.8e4,11e4])
+    ylim([5.75e4,12e4])  
 end
