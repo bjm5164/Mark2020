@@ -23,17 +23,17 @@ xrot = 0;
 yrot = -1;
 zrot = -12;
 
-NPM.vertices = rotate_pointsV2(NPM.vertices,zrot,3);
-NPM.vertices = rotate_pointsV2(NPM.vertices,xrot,1);
-NPM.vertices = rotate_pointsV2(NPM.vertices,yrot,2);
+NPM.vertices = rotate_points(NPM.vertices,zrot,3);
+NPM.vertices = rotate_points(NPM.vertices,xrot,1);
+NPM.vertices = rotate_points(NPM.vertices,yrot,2);
 
 %% Make Plots
 
  if direction == 1
         Output_Coords = cat(1,Output{:})
-        Output_Coords = rotate_pointsV2(Output_Coords,zrot,3);
-        Output_Coords = rotate_pointsV2(Output_Coords,xrot,1);
-        Output_Coords = rotate_pointsV2(Output_Coords,yrot,2);
+        Output_Coords = rotate_points(Output_Coords,zrot,3);
+        Output_Coords = rotate_points(Output_Coords,xrot,1);
+        Output_Coords = rotate_points(Output_Coords,yrot,2);
         
                     
         d = 'Presynaptic';
@@ -55,9 +55,9 @@ NPM.vertices = rotate_pointsV2(NPM.vertices,yrot,2);
     
     elseif direction == 2
         Input_Coords = cat(1,Input{:})
-        Input_Coords = rotate_pointsV2(Input_Coords,zrot,3);
-        Input_Coords = rotate_pointsV2(Input_Coords,xrot,1);
-        Input_Coords = rotate_pointsV2(Input_Coords,yrot,2);
+        Input_Coords = rotate_points(Input_Coords,zrot,3);
+        Input_Coords = rotate_points(Input_Coords,xrot,1);
+        Input_Coords = rotate_points(Input_Coords,yrot,2);
         
         apdv_points_counts = Input_Coords(:,[1,3]);
         apdv_points_plot = apdv_points_counts;
@@ -71,9 +71,9 @@ NPM.vertices = rotate_pointsV2(NPM.vertices,yrot,2);
     
     elseif direction == 3
         Output_Coords = cat(1,Output{:})
-        Output_Coords = rotate_pointsV2(Output_Coords,zrot,3);
-        Output_Coords = rotate_pointsV2(Output_Coords,xrot,1);
-        Output_Coords = rotate_pointsV2(Output_Coords,yrot,2);
+        Output_Coords = rotate_points(Output_Coords,zrot,3);
+        Output_Coords = rotate_points(Output_Coords,xrot,1);
+        Output_Coords = rotate_points(Output_Coords,yrot,2);
         
         [C,ia,ic] = unique(Output_Coords,'rows'); % Search for all unique synapse coordinates
         a_counts = accumarray(ic,1); % Count the number of synapses at each unique set of coordinates
@@ -91,9 +91,9 @@ NPM.vertices = rotate_pointsV2(NPM.vertices,yrot,2);
         
         
         Input_Coords = cat(1,Input{:})
-        Input_Coords = rotate_pointsV2(Input_Coords,zrot,3);
-        Input_Coords = rotate_pointsV2(Input_Coords,xrot,1);
-        Input_Coords = rotate_pointsV2(Input_Coords,yrot,2);
+        Input_Coords = rotate_points(Input_Coords,zrot,3);
+        Input_Coords = rotate_points(Input_Coords,xrot,1);
+        Input_Coords = rotate_points(Input_Coords,yrot,2);
         
         apdv_inputs_counts = Input_Coords(:,[1,3]);
         apdv_inputs_plot = apdv_inputs_counts;
@@ -125,12 +125,12 @@ NPM.vertices = rotate_pointsV2(NPM.vertices,yrot,2);
 
 
 if axes_to_use == 1
-    axis_lims= [min(NPM.v(NPM.v(:,3)>.9e5,1)), max(NPM.v(NPM.v(:,3)>.9e5,1)) , min(NPM.v(NPM.v(:,3)>.9e5,2)), max(NPM.v(NPM.v(:,3)>.9e5,2))];    axis_index = [1,2];
+    axis_lims= [min(NPM.vertices(NPM.vertices(:,3)>.9e5,1)), max(NPM.vertices(NPM.vertices(:,3)>.9e5,1)) , min(NPM.vertices(NPM.vertices(:,3)>.9e5,2)), max(NPM.vertices(NPM.vertices(:,3)>.9e5,2))];    axis_index = [1,2];
     Synapses = mldv_points_counts;
 elseif axes_to_use == 2
-    axis_lims = [min(NPM.v(:,3)), max(NPM.v(:,3)),min(NPM.v(:,1)), max(NPM.v(:,1))];
+    axis_lims = [min(NPM.vertices(:,3)), max(NPM.vertices(:,3)),min(NPM.vertices(:,1)), max(NPM.vertices(:,1))];
     axis_index = [1,3]
-    P = NPM.v(:,[1,3]);
+    P = NPM.vertices(:,[1,3]);
     k = boundary(P,.4);
     Synapses = apdv_points_counts;
 else error('Wrong Axes')
