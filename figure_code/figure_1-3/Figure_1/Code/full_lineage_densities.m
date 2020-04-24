@@ -1,18 +1,5 @@
 load mark2020_neurons.mat
-%% Parse lineages and hemilineages
-an = parse_annotations(Neuron_List,1); % Parse annotations
-Neuron_List = Neuron_List(an.Side_Index == 0)
-an = an(an.Side_Index == 0,:)
-
-for i = 1:length(Neuron_List) % Rename neurons by paired names
-    Neuron_List(i).Names_org = Neuron_List(i).Names;
-    Neuron_List(i).Names = an.Names(i);
-end
-[~,si] = sort([Neuron_List(:).Names]); 
-Neuron_List = Neuron_List(si); % Sort by paired names
-an = an(si,:); clear si % Sort annotations by paired names
-nl = Neuron_List(an.DV_Index < 2); % Get just the interneurons
-an_in = an(an.DV_Index<2,:); % Get just the interneuron annotations
+%% Parse lineages 
 lineages = arrayfun(@(x) nl(an_in.Lineage_Index == x), 1:max(an_in.Lineage_Index),'UniformOutput',false)
 lineages(cellfun(@isempty, lineages)) = []
 lineage_legend = unique(an_in.Lineage)
