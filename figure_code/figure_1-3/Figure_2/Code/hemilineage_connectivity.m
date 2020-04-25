@@ -6,13 +6,7 @@
 % hemilieange j.  It uses the scripts get_adjacency and concatinate
 % synapses
 
-load m19_neurons_original.mat
-for i = 1:length(Neuron_List) % Rename neurons by paired names
-    Neuron_List(i).Names_org = Neuron_List(i).Names;
-    Neuron_List(i).Names = an.Names(i);
-end
-[~,si] = sort([Neuron_List(:).Names]); Neuron_List = Neuron_List(si); % Sort by paired names
-an = an(si,:);clear si % Sort annotations by paired names
+load mark2020_neurons.mat
 
 % Get the adjacency matrix of all neurons
 adj = get_adjacency(Neuron_List,0); 
