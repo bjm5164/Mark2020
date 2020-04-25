@@ -1,5 +1,5 @@
 %% Parse lineages and hemilineages
-load m19_neurons.mat
+load mark2020_neurons_organized.mat
 [an_in,index] = sortrows(an_in,4);
 nl = nl(index);
 
