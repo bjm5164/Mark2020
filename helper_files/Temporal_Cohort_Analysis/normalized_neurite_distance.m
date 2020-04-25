@@ -1,4 +1,4 @@
-function [ratiometric_distance] = normalized_neurite_distance(nl,use_mean)
+function [ratiometric_distance] = normalized_neurite_distance(nl,use_mean,side)
 % Calculate a cortex neurite length for each neuron that is normalized to
 % the width of the neuropil at the location of that neuron. This can be
 % done using the neurite of individual neurons, or all of the neurites of a
@@ -31,7 +31,8 @@ CP = triangulation(CNS_mesh.faces,CNS_mesh.vertices);
 
 figure; hold on
 for i = 1:length(nl)       
-    % Generate a vector that is the average of the neurite tract.
+    % Generate a vector that is the average of the neurite tract. Use the
+    % cell body as a second point if not using multiple neurons.
     if contains(nl(i).Names{1}(end),'l')
         p1 = mean(neurite_coords{i},1);
         p2 = p1 + std(neurite_coords{i},1);
@@ -40,18 +41,33 @@ for i = 1:length(nl)
         p2 = p1 + std(neurite_coords{i},1);
         p2(:,2) = p1(:,2)-std(neurite_coords{i}(:,2),1);
         p2(:,3) = p1(:,3)-std(neurite_coords{i}(:,3),1);
+    elseif exist('side','var') 
+        if contains(side,'left') | contains(side,'Left')
+            p1 = mean(neurite_coords{i},1);
+            p2 = p1 + std(neurite_coords{i},1);
+        elseif contains(side,'right') | contains(side,'Right')
+            p1 = mean(neurite_coords{i},1);
+            p2 = p1 + std(neurite_coords{i},1);
+            p2(:,2) = p1(:,2)-std(neurite_coords{i}(:,2),1);
+            p2(:,3) = p1(:,3)-std(neurite_coords{i}(:,3),1);
+        else error('Incorrect side input')
+        end
     else error('Name not formatted correctly for this analysis')
-    end    
+    end 
+    
+    if use_mean == 0
+        p2 = nl(i).Soma_Coords
+    else
+    end
+    
     u = (p2-p1)/norm(p2-p1);   % unit vector, p1 to p2
-    d = (-50000:50:50000)';       % displacement from p1, along u
+    d = (-150000:50:(10000/p1(2))*150000)';       % displacement from p1, along u
     neurite_vector = p1 + d*u;
-
-
+    
+       
     
     % Generate distance measures for each point along the neurite vector to
     % either the edge of the neuropil or the edge of the CNS
-    clear CP_id and CP_d and NP_id and NP_d
-    
     % Find points on neurite vector in the neuropil and in the cns
     in_neuropil = find(inpolyhedron(NPM,neurite_vector)==1);
     out_cns = find(inpolyhedron(CNS_mesh,neurite_vector)==0);
@@ -70,6 +86,8 @@ for i = 1:length(nl)
     npd(i) = nl(i).skeleton_data.Distance_To_Neuropil;
     
     if use_mean == 0
+        surfaces(NPM,'k',.05,3);
+        surfaces(CNS_mesh,'k',.02,3);
         plot_neurons(nl(i),'k',.1,3,1,0);
         scatter3(neuropil_point(1),neuropil_point(2),neuropil_point(3),100,'c')
         scatter3(cortex_point(1),cortex_point(2),cortex_point(3),100,'g')

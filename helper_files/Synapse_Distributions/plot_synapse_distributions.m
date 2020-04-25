@@ -25,15 +25,14 @@ function plot_synapse_distributions(nl_cell,clr,direction,alpha)
     pos = ax_1.Position;
     posnew = pos; posnew(4) = posnew(4) +.08; set(ax_1, 'Position', posnew); clear pos and posnew;
     ax_1.YLabel.Position(2) = ax_1.YLabel.Position(2) + .00005
-    
-     
-    ax_2 = subplot(3,7,[12,13,14,19,20,21]); hold on;
-    pos = ax_2.Position;
-    posnew = pos; posnew(1) = posnew(1) + 0.08; posnew(4) = posnew(4) +.08; set(ax_2, 'Position', posnew); clear pos and posnew;
-    
-    ax_3 = subplot(3,7,[5,6,7]); hold on
-    pos = ax_3.Position
-    posnew = pos; posnew(1) = posnew(1) + 0.08; set(ax_3, 'Position', posnew); clear pos and posnew
+   
+%     ax_2 = subplot(3,7,[5,6,12,13,19,20]); hold on;
+%     %pos = ax_2.Position;
+%     %posnew = pos; posnew(1) = posnew(1) + 0.08; posnew(4) = posnew(4) +.08; set(ax_2, 'Position', posnew); clear pos and posnew;
+%     
+     ax_3 = subplot(3,7,[7,14,21]); hold on
+     pos = ax_3.Position
+     posnew = pos; posnew(1) = posnew(1) - 0.08; set(ax_3, 'Position', posnew); clear pos and posnew
 end
         
         

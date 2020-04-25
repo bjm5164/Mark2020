@@ -1,4 +1,4 @@
-function [cohorts,t] = get_temporal_cohorts_by_cell_body(lineage,cutoff,bilateral,normalization)
+function [cohorts,t] = get_temporal_cohorts_by_cell_body(lineage,cutoff,bilateral,normalization,limits)
     if  nargin>2 & bilateral == 1
         an_l = parse_annotations(lineage,1);
         index_l = find(an_l.Side_Index == 0);
@@ -51,7 +51,8 @@ function [cohorts,t] = get_temporal_cohorts_by_cell_body(lineage,cutoff,bilatera
     if normalization == 1
         c_edge = sort(discretize(cluster_distance,[0,.39,.64,.85,1.2]));
     else
-        c_edge = sort(discretize(cluster_distance,[0,8863,16088,21544,27000]));
+        %c_edge = sort(discretize(cluster_distance,[0,8863,16088,21544,27000]));
+         c_edge = sort(discretize(cluster_distance,limits))
     end
     [~,index] = sort(cluster_distance); %Sort clusters by neurite length
     if bilateral == 1

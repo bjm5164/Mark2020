@@ -99,9 +99,9 @@ end
     elseif direction == 2
         if isempty(nl(i).Inputs.treenodeID) == 0
             Input_Coords = cat(1,Input{:});
-            Input_Coords = rotate_pointsV2(Input_Coords,zrot,3);
-            Input_Coords = rotate_pointsV2(Input_Coords,xrot,1);
-            Input_Coords = rotate_pointsV2(Input_Coords,yrot,2);
+            Input_Coords = rotate_points(Input_Coords,zrot,3);
+            Input_Coords = rotate_points(Input_Coords,xrot,1);
+            Input_Coords = rotate_points(Input_Coords,yrot,2);
 
             apdv_points_counts = Input_Coords(:,[1,3]);
             apdv_points_plot = apdv_points_counts;
@@ -118,9 +118,9 @@ end
     elseif direction == 3
         if isempty(nl(i).Outputs.treenodeID) == 0
             Output_Coords = cat(1,Output{:});
-            Output_Coords = rotate_pointsV2(Output_Coords,zrot,3);
-            Output_Coords = rotate_pointsV2(Output_Coords,xrot,1);
-            Output_Coords = rotate_pointsV2(Output_Coords,yrot,2);
+            Output_Coords = rotate_points(Output_Coords,zrot,3);
+            Output_Coords = rotate_points(Output_Coords,xrot,1);
+            Output_Coords = rotate_points(Output_Coords,yrot,2);
 
             [C,ia,ic] = unique(Output_Coords,'rows'); % Search for all unique synapse coordinates
             a_counts = accumarray(ic,1); % Count the number of synapses at each unique set of coordinates
@@ -138,9 +138,9 @@ end
         end
         if isempty(nl(i).Inputs.treenodeID) == 0
             Input_Coords = cat(1,Input{:})
-            Input_Coords = rotate_pointsV2(Input_Coords,zrot,3);
-            Input_Coords = rotate_pointsV2(Input_Coords,xrot,1);
-            Input_Coords = rotate_pointsV2(Input_Coords,yrot,2);
+            Input_Coords = rotate_points(Input_Coords,zrot,3);
+            Input_Coords = rotate_points(Input_Coords,xrot,1);
+            Input_Coords = rotate_points(Input_Coords,yrot,2);
 
             apdv_inputs_counts = Input_Coords(:,[1,3]);
             apdv_inputs_plot = apdv_inputs_counts;
@@ -171,12 +171,12 @@ end
 
 if isempty(mldv_points_counts) == 0
     if nargin == 4
-        subplot(3,7,[12,13,14,19,20,21])
+        subplot(3,7,[5,6,12,13,19,20])
         NPM.vertices = NPM.vertices(:,[1,3,2]);
         surfaces(NPM,'k',.02,3,[])
         %surfaces(NPM.v(:,[1,3,2]),'k',.02,'-');
     elseif draw_surface == 1
-        subplot(3,7,[12,13,14,19,20,21])
+        subplot(3,7,[5,6,12,13,19,20])
         NPM.vertices = NPM.vertices(:,[1,3,2]);
         surfaces(NPM,'k',.02,3,[])
         %surfaces(NPM.v(:,[1,3,2]),'k',.02,'-');
@@ -226,18 +226,18 @@ if isempty(mldv_points_counts) == 0
     
     
     % Plot the AP Points
-    subplot(3,7,[12,13,14,19,20,21]); hold on;
+    subplot(3,7,[5,6,12,13,19,20]); hold on;
     scatter(apdv_points_plot(:,1),apdv_points_plot(:,2),polyadics_ap*100,'.','MarkerFaceColor',clr,'MarkerEdgeColor',clr,'MarkerFaceAlpha',alpha,'MarkerEdgeAlpha',alpha);
     ax_ap1 = gca; 
     ax_ap1.XAxisLocation = 'Top'; xticks([]);
-    view([90 90]);
+    view([-180 90]);
     axis off; axis equal;
     ylim([axis_lims_APDV(1),axis_lims_APDV(2)]);
     xlim([axis_lims_APDV(3),axis_lims_APDV(4)]) ;
     
     
     % Plot the AP histogram
-    ax_ap2 = subplot(3,7,[5,6,7]); hold on
+    ax_ap2 = subplot(3,7,[7,14,21]); hold on
     
     pd_apdv = fitdist(apdv_points_counts(:,2),'kernel','kernel','normal','BandWidth',2000);
     x1_apdv = axis_lims_APDV(1):800:axis_lims_APDV(2);
@@ -245,7 +245,10 @@ if isempty(mldv_points_counts) == 0
     area(x1_apdv,y1_apdv,'EdgeColor',clr,'LineWidth',2,'FaceColor',clr,'FaceAlpha',.1)
     ylabel(strcat(d,' Density'));
     xlim([axis_lims_APDV(1),axis_lims_APDV(2)]); 
-    %xticks([]);
+    view([270, 90])
+    ax_ap2.XAxisLocation = 'Top'
+    ax_ap2.XDir = 'Reverse'
+    xticks([]);
     
     %scatter(x1_apdv(y1_apdv==max(y1_apdv)),max(y1_apdv)+.1*max(y1_apdv),20,'MarkerFaceColor',clr','MarkerEdgeColor','k','MarkerFaceAlpha',.5,'MarkerEdgeAlpha',.5)
     hold off

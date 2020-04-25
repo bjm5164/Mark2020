@@ -1,4 +1,4 @@
-function [Neuron_List] = temporal_cohort_assignments(Neuron_List,method,normalization,cutoff,bilateral)
+function [Neuron_List] = temporal_cohort_assignments(Neuron_List,method,normalization,cutoff,bilateral,limits)
 % Generate the temporal cohort assignments for a neuron list.  There are
 % two ways to do it:  
 %               Cell_body: Distance clustering of the cell 
@@ -34,11 +34,8 @@ function [Neuron_List] = temporal_cohort_assignments(Neuron_List,method,normaliz
 %               
 
 %% Parse lineages and hemilineages
+
 an = parse_annotations(Neuron_List,1); % Parse annotations
-for i = 1:length(Neuron_List) % Rename neurons by paired names
-    Neuron_List(i).Names_org = Neuron_List(i).Names;
-    Neuron_List(i).Names = an.Names(i);
-end
 [~,si] = sort([Neuron_List(:).Names]); 
 Neuron_List = Neuron_List(si); % Sort by paired names
 an = an(si,:);clear si % Sort annotations by paired names
@@ -46,13 +43,13 @@ in_index = find(an.DV_Index<2);
 nl = Neuron_List(in_index); % Get just the interneurons
 an_in = an(in_index,:); % Get just the interneuron annotations
 
-lineage_indices = unique(an_in.Lineage_Index);
-lineages = arrayfun(@(x) nl(an_in.Lineage_Index == x), min(an_in.Lineage_Index):max(an_in.Lineage_Index),'UniformOutput',false);
-an_l = arrayfun(@(x) an_in(an_in.Lineage_Index == x,:), min(an_in.Lineage_Index):max(an_in.Lineage_Index),'UniformOutput',false);
+% lineage_indices = unique(an_in.Lineage_Index);
+% lineages = arrayfun(@(x) nl(an_in.Lineage_Index == x), min(an_in.Lineage_Index):max(an_in.Lineage_Index),'UniformOutput',false);
+% an_l = arrayfun(@(x) an_in(an_in.Lineage_Index == x,:), min(an_in.Lineage_Index):max(an_in.Lineage_Index),'UniformOutput',false);
 
-% lineage_indices = unique([an_in.Lineage_Index,an_in.DV_Index],'rows')
-% lineages = arrayfun(@(x) nl(an_in.Lineage_Index == lineage_indices(x,1) & an_in.DV_Index == lineage_indices(x,2)), 1:length(lineage_indices),'UniformOutput',false)
-% an_l = arrayfun(@(x) an_in(an_in.Lineage_Index == lineage_indices(x,1) & an_in.DV_Index == lineage_indices(x,2),:), 1:length(lineage_indices),'UniformOutput',false)
+lineage_indices = unique([an_in.Lineage_Index,an_in.DV_Index],'rows')
+lineages = arrayfun(@(x) nl(an_in.Lineage_Index == lineage_indices(x,1) & an_in.DV_Index == lineage_indices(x,2)), 1:length(lineage_indices),'UniformOutput',false)
+an_l = arrayfun(@(x) an_in(an_in.Lineage_Index == lineage_indices(x,1) & an_in.DV_Index == lineage_indices(x,2),:), 1:length(lineage_indices),'UniformOutput',false)
 
 %%
 
@@ -86,19 +83,19 @@ for i = 1:length(lineages)
         lineages{i}(ii).Mean_Neuropil_Distance = npd_bi(ii);
     end
     
-    if contains(method,'cell_body')
+    if contains(method,'cell_body') 
     % Use cell body clustering
-        cohorts{i} = get_temporal_cohorts_by_cell_body(lineages{i},cutoff,bilateral,normalization); % Get temporal cohorts by clustering cell body locations
+        cohorts{i} = get_temporal_cohorts_by_cell_body(lineages{i},cutoff,bilateral,normalization,limits); % Get temporal cohorts by clustering cell body locations
         mean_c = cohorts{i}; % Take the mean for left and right homologs
         tc2 = mean_c;
     elseif contains(method,'cortex_neurite')
      % Use cortex neurite length
-        cohorts{i} = get_temporal_cohorts_by_NPD(lineages{i},cutoff,bilateral,normalization); % Get temporal cohorts using a neurite length distance kernel
+        cohorts{i} = get_temporal_cohorts_by_NPD(lineages{i},cutoff,bilateral,normalization,limits); % Get temporal cohorts using a neurite length distance kernel
         mean_c = cohorts{i};
         tc2 = mean_c;
     else
         display('Using default cell body clustering')
-        cohorts{i} = get_temporal_cohorts(lineages{i},cutoff,1); % Get temporal cohorts by clustering cell body locations
+        cohorts{i} = get_temporal_cohorts_by_cell_body(lineages{i},cutoff,bilateral,normalization,limits); % Get temporal cohorts by clustering cell body locations
         mean_c = cohorts{i}; % Take the mean for left and right homologs
         tc2 = mean_c;
     end
@@ -116,8 +113,8 @@ end
 
 nl = cat(2,lineages{:})
 for i = 1:length(lineages)
-    nl(an_in.Lineage_Index == lineage_indices(i)) = lineages{i}
-    %nl(ismember([an_in.Lineage_Index,an_in.DV_Index],lineage_indices(i,:),'rows'))
+    %nl(an_in.Lineage_Index == lineage_indices(i)) = lineages{i}
+    nl(ismember([an_in.Lineage_Index,an_in.DV_Index],lineage_indices(i,:),'rows'))
 end
 
 
