@@ -1,5 +1,5 @@
-.csv
-.svg
-.tiff
-.png
-.jpg
+*.csv
+*.svg
+*.tiff
+*.png
+*.jpg
