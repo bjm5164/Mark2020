@@ -28,21 +28,21 @@ function densities = synapse_density(neuron,direction,sigma)
     end
    
 
-    density_range = [0,1.22.^[1:20]]
-    input_density_discrete = discretize(densities,density_range)
-    map = plasma(length(density_range))
-    figure
-    pg = plot_neurons(neuron,'k',1,3,1,1,1)
-    for i = 1:length(input_density_discrete)
-%          if densities(i) > 5          
-%            highlight(pg,i,'NodeColor','b','MarkerSize',2)
-%          else
-%            highlight(pg,i,'NodeColor','k','MarkerSize',2)
-%          end
-         highlight(pg,i,'NodeColor',map(input_density_discrete(i),:))
-         highlight(pg,i,successors(neuron.skeleton_data.Graph,i),'EdgeColor',map(input_density_discrete(i),:))
-    end
-    axis equal
+%     density_range = [0,1.22.^[1:20]]
+%     input_density_discrete = discretize(densities,density_range)
+%     map = plasma(length(density_range))
+%     figure
+%     pg = plot_neurons(neuron,'k',1,3,1,1,1,map(input_density_discrete(neuron.skeleton_data.Soma),:))
+%     for i = 1:length(input_density_discrete)
+% %          if densities(i) > 5          
+% %            highlight(pg,i,'NodeColor','b','MarkerSize',2)
+% %          else
+% %            highlight(pg,i,'NodeColor','k','MarkerSize',2)
+% %          end
+%          highlight(pg,i,'NodeColor',map(input_density_discrete(i),:))
+%          highlight(pg,i,successors(neuron.skeleton_data.Graph,i),'EdgeColor',map(input_density_discrete(i),:))
+%     end
+%     axis equal
 end
 
 
