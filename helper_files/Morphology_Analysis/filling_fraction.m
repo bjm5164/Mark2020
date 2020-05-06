@@ -1,4 +1,4 @@
-function [filling_fraction,n_real,n_possible] = filling_fraction(pre_neuron,post_neuron)
+function [filling_fraction,n_real,n_possible] = filling_fraction(pre_neuron,post_neuron,density_col)
 
 % Compute a filling fraction for two neurons.  Default settings are to
 % compare the filling fraction between the presynaptic axon and
@@ -11,7 +11,7 @@ sn = strahler_number( post_neuron );
 %%
 % Find the arbors that fit the strahler threshold that are part of the
 % dendrite 
-input_neurite = find(sn(:)<=min_strahler & post_neuron.input_density(:) > 5);
+input_neurite = find(sn(:)<=min_strahler & post_neuron.input_density(:,density_col) > 5);
 post_xyz = post_neuron.Skeleton_Coords(input_neurite,:);
 
 % Next get the index of the presynaptic sites on the axon of the pre-neuron
