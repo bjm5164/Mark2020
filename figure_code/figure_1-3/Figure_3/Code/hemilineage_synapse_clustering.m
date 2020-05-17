@@ -1,5 +1,5 @@
 %% Parse lineages and hemilineages
-load mark2020_neurons_organized.mat
+load mark2020_neurons_temporal_cohorts.mat
 [an_in,index] = sortrows(an_in,4);
 nl = nl(index);
 
@@ -34,14 +34,14 @@ map(end-3,:) = [0 .6 1]
 %% Calculate synapse similarity 
 
 % Calculate presynapse similarity for neurons on left and right side.  
-pre_sim_l = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),4000,3,[],1);
-pre_sim_r = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),4000,3,[],1);
+pre_sim_l = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),2000,3,[],1);
+pre_sim_r = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),2000,3,[],1);
 pre_sim = (pre_sim_l + pre_sim_r)*.5 %Average similarities for left/right homologs
 
 
 % Calculate postsynapse similarity for neurons on left and right sides.
-post_sim_l = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),4000,3,[],2);
-post_sim_r = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),4000,3,[],2);
+post_sim_l = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),2000,3,[],2);
+post_sim_r = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),2000,3,[],2);
 post_sim = (post_sim_l + post_sim_r)*.5 % Average similarities for left/right homologs
 
 

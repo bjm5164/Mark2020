@@ -17,8 +17,6 @@ dorsal_hemilineages = hemilineages(hemilineage_index(:,2) == 1);
 ventral_hemilineages = hemilineages(hemilineage_index(:,2) == 0);
 clearvars -except dorsal_hemilineages and ventral_hemilineages and hemilineages and Neuron_List and savefigs and directory an an and hemi_legend and nl and an_in
 
-nl = nl(an_in.DV_Index == 1)
-an_in = an_in(an_in.DV_Index == 1,:)
 %% Quantify similarity
 
 presim_mat_l = synapse_similarity_v2(nl(an_in.Side_Index == 0),2000,3,[],1);

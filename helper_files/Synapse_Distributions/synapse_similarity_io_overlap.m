@@ -1,8 +1,10 @@
-function [sim_mat] = synapse_similarity_io_overlap(nl,sigma)
+function [sim_mat,dists] = synapse_similarity_io_overlap(nl,sigma,omega)
 % calculate synapse similarity between inputs and outputs of a population
 % of neurons such that sim_mat(i,j) is the similarity between the
 % presynaptic sites of neuron i and the postsynaptic sites of neuron j.  
-
+if exist('omega','var') == 0
+    omega = sigma
+end
 
 for i = 1:length(nl)
     if isempty(nl(i).Inputs.treenodeID) == 0
@@ -43,9 +45,10 @@ for i = 1:length(nl)
         clear sim and n_is and n_jk and Dsk
         for s = 1:size(D_isjk,1);
             Dsk(s) = k_vals(s);
-            n_is(s) = numel(find(D_isis(s,:)<sigma))/size(D_isis,2);
-            n_jk(s) = numel(find(D_jkjk(k_idx(s),:)<sigma))/size(D_jkjk,2);
+            n_is(s) = numel(find(D_isis(s,:)<omega))/size(D_isis,2);
+            n_jk(s) = numel(find(D_jkjk(k_idx(s),:)<omega))/size(D_jkjk,2);
             sim(s) = exp((-1*(Dsk(s)^2))/(2*(sigma^2)))*exp(-1*abs(n_is(s)-n_jk(s))/(n_is(s)+n_jk(s)));
+            dists{i,j}{s} = Dsk;
         end
         similarity_matrix(i,j) = mean(sim);
         

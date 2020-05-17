@@ -4,7 +4,9 @@ function [filling_fraction,n_real,n_possible] = filling_fraction(pre_neuron,post
 % compare the filling fraction between the presynaptic axon and
 % postsynaptic dendrite. 
 
-
+if exist('density_col','var') == 0
+    density_col = 1
+end
 
 min_strahler = 1; 
 sn = strahler_number( post_neuron );
@@ -19,7 +21,7 @@ presyn_node_ids = arrayfun(@(x) pre_neuron.skeleton_data.Tree2Ind(pre_neuron.Out
 pre_xyz = pre_neuron.Skeleton_Coords(presyn_node_ids,:);
 
 
-distance_range = 1000;
+distance_range = 2000;
 clear nprox and nfill and ff
 for i = 1:length(distance_range)
     D = min( pdist2(post_xyz,pre_xyz), [], 1 );

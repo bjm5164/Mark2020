@@ -87,8 +87,8 @@ for i = 1:length(nl)
         clear sim and n_is and n_jk and Dsk
         for s = 1:size(D_isjk,1);
             Dsk(s) = k_vals(s);
-            n_is(s) = numel(find(D_isis(s,:)<sigma))/size(D_isis,2);
-            n_jk(s) = numel(find(D_jkjk(k_idx(s),:)<sigma))/size(D_jkjk,2);
+            n_is(s) = numel(find(D_isis(s,:)<5000))/size(D_isis,2);
+            n_jk(s) = numel(find(D_jkjk(k_idx(s),:)<5000))/size(D_jkjk,2);
             sim(s) = exp((-1*(Dsk(s)^2))/(2*(sigma^2)))*exp(-1*abs(n_is(s)-n_jk(s))/(n_is(s)+n_jk(s)));
         end
         similarity_matrix(i,j) = mean(sim);
