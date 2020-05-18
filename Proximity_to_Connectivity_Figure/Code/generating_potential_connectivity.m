@@ -1,23 +1,26 @@
 %% Calculate synapse densities
 % Calculate densities for a range of values
-tic
-for i = 1:length(nl)
-    input_densities = synapse_density(nl(i),2,5000);
-    output_densities = synapse_density(nl(i),1,5000);
-    nl(i).output_density = output_densities;
-    nl(i).input_density = input_densities; clear densities
-end
-toc
-%% 
-tic
-for i = 1:length(nl)
-    for j = 1:length(nl)
-        [~,n_real,n_possible] = filling_fraction(nl(i),nl(j))
-        real_adjacency(i,j) = n_real; clear n_real
-        potential_adjacency(i,j) = n_possible; clear n_possible
+load mark2020_neurons_temporal_cohorts.mat
+sigmas = [1000:1000:5000]
+for jj = 1:length(sigmas)
+    for i = 1:length(nl)
+        input_densities = synapse_density(nl(i),2,sigmas(jj));
+        output_densities = synapse_density(nl(i),1,sigmas(jj));
+        nl(i).output_density(:,jj) = output_densities;
+        nl(i).input_density(:,jj) = input_densities; clear input_densities and output_densities
     end
 end
-toc
+
+%% 
+for kk = 2:5
+    for i = 1:length(nl)
+        for j = 1:length(nl)
+            [~,n_real,n_possible] = filling_fraction(nl(i),nl(j),kk);
+            real_adjacency{kk}(i,j) = n_real; clear n_real
+            potential_adjacency{kk}(i,j) = n_possible; clear n_possible
+        end
+    end
+end
 %%
 adj = get_adjacency(nl,0)
 binary_potential = potential_adjacency
