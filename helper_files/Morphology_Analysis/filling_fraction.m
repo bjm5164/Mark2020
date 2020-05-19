@@ -25,10 +25,10 @@ distance_range = 2000;
 clear nprox and nfill and ff
 for i = 1:length(distance_range)
     D = min( pdist2(post_xyz,pre_xyz), [], 1 );
-    Du = D < (distance_range(i));
+    D_thresh = D < (distance_range(i));
 
-    n_possible(i) = sum( Du );
-    n_real(i) = length(intersect( post_neuron.Inputs.conid, pre_neuron.Outputs.conid( Du ) ) );
+    n_possible(i) = sum( D_thresh );
+    n_real(i) = length(intersect( post_neuron.Inputs.conid, pre_neuron.Outputs.conid( D_thresh ) ) );
     filling_fraction(i) = n_real(i)/n_possible(i);
     if filling_fraction(i) == inf
         filling_fraction(i) = -1;
