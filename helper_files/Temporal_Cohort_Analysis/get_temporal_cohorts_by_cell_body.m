@@ -1,4 +1,20 @@
 function [cohorts,t] = get_temporal_cohorts_by_cell_body(lineage,cutoff,bilateral,normalization,limits)
+% Classify neurons into temporal cohorts based on a combination of their cortex neurite
+% lengths and cell body clustering. This is basically a way to allow for
+% softer edges of the temporal cohort cutoffs if cell bodies are overly
+% clustered together.
+% Inputs:
+%           lineage: a neuron list, either a lineage or hemilineage.
+%           cutoff: a cutoff for defining cell body clusters. The function
+%           will measure the distance between cell bodies and cluster them.
+%           The cutoff defines the clusters.
+%           bilateral: If the neurons in the lineage neuron list are
+%           left/right homologs, it will do everything on the left and
+%           right separately, then average the outputs.
+%           normalization: normalizes the cortex neurite length to the
+%           width of the cortex where the lineage is. (DOESN'T WORK WELL)
+%           limits: edges for the temporal cohort assignments.
+
     if  nargin>2 & bilateral == 1
         an_l = parse_annotations(lineage,1);
         index_l = find(an_l.Side_Index == 0);
