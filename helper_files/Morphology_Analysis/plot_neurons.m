@@ -18,7 +18,7 @@ for i = 1:length(Neurons)
        else
        end
        
-        if exist('soma_color','var')
+        if exist('soma_color','var') && isempty(soma_color) == 0
         else
             soma_color = color
         end
