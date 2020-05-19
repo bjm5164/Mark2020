@@ -1,4 +1,4 @@
-function pg = plot_neurons(Neurons,color,alpha,dim,soma,synapses,strahler_sizing,soma_color)
+function pg = plot_neurons(Neurons,color,alpha,dim,soma,synapses,strahler_sizing,soma_color,syn_color)
 
 for i = 1:length(Neurons)
     
@@ -58,26 +58,35 @@ for i = 1:length(Neurons)
     end
     if nargin >5
         if synapses == 1
-             
-%                 for u = 1:length(Neurons(i).Inputs.treenodeID)
-%                     highlight(pg,Neurons(i).Tree2Ind(Neurons(i).Inputs.treenodeID(u)),'NodeColor','c','MarkerSize',5)
-%                 end
-%                 for k = 1:length(Neurons(i).Outputs.treenodeID)
-%                     highlight(pg,Neurons(i).Tree2Ind(Neurons(i).Outputs.treenodeID(k)),'NodeColor','r','MarkerSize',5)
-%                 end
+             if exist('syn_color','var')
+                if contains(syn_color,'skeleton')
+                    syn_color_pre = color;
+                    syn_color_post = color;
+                elseif length(syn_color)>1
+                    syn_color_pre = syn_color{1};
+                    syn_color_post = syn_color{2};
+                else
+                    syn_color_pre = syn_color;
+                    syn_color_post = syn_color;
+                end
+             else
+                 syn_color_pre = 'r';
+                 syn_color_post = 'c';
+             end
+
                 if isempty(Neurons(i).Inputs.treenodeID) == 0
                     if dim == 3
-                        scatter3(Neurons(i).Inputs.xyz(:,1),Neurons(i).Inputs.xyz(:,2),Neurons(i).Inputs.xyz(:,3),200,'.','MarkerFaceColor','c','MarkerEdgeColor','c')
+                        scatter3(Neurons(i).Inputs.xyz(:,1),Neurons(i).Inputs.xyz(:,2),Neurons(i).Inputs.xyz(:,3),200,'.','MarkerFaceColor',syn_color_post,'MarkerEdgeColor',syn_color_post)
                     else
-                        scatter(Neurons(i).Inputs.xyz(:,1),Neurons(i).Inputs.xyz(:,2),200,'.','MarkerFaceColor','c','MarkerEdgeColor','c')
+                        scatter(Neurons(i).Inputs.xyz(:,1),Neurons(i).Inputs.xyz(:,2),200,'.','MarkerFaceColor',syn_color_post,'MarkerEdgeColor',syn_color_post)
                     end
                 else
                 end
                 if isempty(Neurons(i).Outputs.treenodeID) == 0
                     if dim == 3
-                        scatter3(Neurons(i).Outputs.xyz(:,1),Neurons(i).Outputs.xyz(:,2),Neurons(i).Outputs.xyz(:,3),200,'.','MarkerFaceColor','r','MarkerEdgeColor','r')
+                        scatter3(Neurons(i).Outputs.xyz(:,1),Neurons(i).Outputs.xyz(:,2),Neurons(i).Outputs.xyz(:,3),200,'.','MarkerFaceColor',syn_color_pre,'MarkerEdgeColor',syn_color_pre)
                     else
-                        scatter(Neurons(i).Outputs.xyz(:,1),Neurons(i).Outputs.xyz(:,2),200,'.','MarkerFaceColor','r','MarkerEdgeColor','r')
+                        scatter(Neurons(i).Outputs.xyz(:,1),Neurons(i).Outputs.xyz(:,2),200,'.','MarkerFaceColor',syn_color_pre,'MarkerEdgeColor',syn_color_pre)
                     end
                 else
                 end
