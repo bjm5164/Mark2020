@@ -1,4 +1,4 @@
-function neuron_adj = get_adjacency(Neuron_List,fractions)
+function neuron_adj = get_adjacency(Neuron_List,fractions,synapse_threhsold)
     % Generate an adjacency matrix from a neuron list.  It does this by
     % looking at the partner skids associated with each connector.
     % Inputs:      Neuron_List:  a standard neuron list imported using
@@ -6,6 +6,8 @@ function neuron_adj = get_adjacency(Neuron_List,fractions)
     %              fractions:  1 or 0.  1: divide the edge weight by the
     %              total number of inputs onto that neuron. 0: raw edge
     %              weights.
+    %              synapse_threshold: Minimum weight to consider a
+    %              connection.  
     % Outputs:  adjacency matrix
     neuron_adj = zeros(length(Neuron_List),length(Neuron_List));
     skids = [Neuron_List(:).SkIDs];
@@ -25,5 +27,10 @@ function neuron_adj = get_adjacency(Neuron_List,fractions)
             else
             neuron_adj(i,find(skids==con_table(j,1))) = con_table(j,2);
         end
-    end
+        end
+    
+        if exist('synapse_threhsold','var')
+            neuron_adj(neuron_adj<synapse_threshold) = 0;
+        else
+        end
 end
