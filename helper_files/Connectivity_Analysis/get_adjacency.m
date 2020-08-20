@@ -1,4 +1,4 @@
-function neuron_adj = get_adjacency(Neuron_List,fractions,synapse_threhsold)
+function neuron_adj = get_adjacency(Neuron_List,fractions,synapse_threshold)
     % Generate an adjacency matrix from a neuron list.  It does this by
     % looking at the partner skids associated with each connector.
     % Inputs:      Neuron_List:  a standard neuron list imported using
@@ -29,7 +29,7 @@ function neuron_adj = get_adjacency(Neuron_List,fractions,synapse_threhsold)
         end
         end
     
-        if exist('synapse_threhsold','var')
+        if exist('synapse_threshold','var')
             neuron_adj(neuron_adj<synapse_threshold) = 0;
         else
         end
