@@ -191,16 +191,16 @@ bar(2,nanmean(dorsal_presynaptic),'FaceColor','b')
 errorbar(2,nanmean(dorsal_presynaptic),nanstd(dorsal_presynaptic)/sqrt(numel(dorsal_presynaptic)),'k')
 [p_d_pre,h] = ranksum(dorsal_presynaptic,dorsal_presynaptic_unrelated)
 
-bar(4,nanmean(dorsal_postsynaptic_unrelated),'FaceColor','k')
-errorbar(4,nanmean(dorsal_postsynaptic_unrelated),std(dorsal_postsynaptic_unrelated)/sqrt(numel(dorsal_postsynaptic_unrelated)),'k')
-bar(5,nanmean(dorsal_postsynaptic),'FaceColor',[0.9255    0.3765    0.0471])
-errorbar(5,nanmean(dorsal_postsynaptic),nanstd(dorsal_postsynaptic)/sqrt(numel(dorsal_postsynaptic)),'k')
+bar(7,nanmean(dorsal_postsynaptic_unrelated),'FaceColor','k')
+errorbar(7,nanmean(dorsal_postsynaptic_unrelated),std(dorsal_postsynaptic_unrelated)/sqrt(numel(dorsal_postsynaptic_unrelated)),'k')
+bar(8,nanmean(dorsal_postsynaptic),'FaceColor',[0.9255    0.3765    0.0471])
+errorbar(8,nanmean(dorsal_postsynaptic),nanstd(dorsal_postsynaptic)/sqrt(numel(dorsal_postsynaptic)),'k')
 [p_d_post,h] = ranksum(dorsal_postsynaptic,dorsal_postsynaptic_unrelated)
 
-bar(7,nanmean(ventral_presynaptic_unrelated),'FaceColor','k')
-errorbar(7,nanmean(ventral_presynaptic_unrelated),std(ventral_presynaptic_unrelated)/sqrt(numel(ventral_presynaptic_unrelated)),'k')
-bar(8,nanmean(ventral_presynaptic),'FaceColor','b')
-errorbar(8,nanmean(ventral_presynaptic),nanstd(ventral_presynaptic)/sqrt(numel(ventral_presynaptic)),'k')
+bar(4,nanmean(ventral_presynaptic_unrelated),'FaceColor','k')
+errorbar(4,nanmean(ventral_presynaptic_unrelated),std(ventral_presynaptic_unrelated)/sqrt(numel(ventral_presynaptic_unrelated)),'k')
+bar(5,nanmean(ventral_presynaptic),'FaceColor','b')
+errorbar(5,nanmean(ventral_presynaptic),nanstd(ventral_presynaptic)/sqrt(numel(ventral_presynaptic)),'k')
 [p_v_pre,h] = ranksum(ventral_presynaptic,ventral_presynaptic_unrelated)
 
 bar(10,nanmean(ventral_postsynaptic_unrelated),'FaceColor','k')
@@ -210,7 +210,7 @@ errorbar(11,nanmean(ventral_postsynaptic),std(ventral_postsynaptic)/sqrt(numel(v
 [p_v_post,h] = ranksum(ventral_postsynaptic,ventral_postsynaptic_unrelated)
 
 xticks([1.5,4.5,7.5,10.5])
-xticklabels({'Dorsal Presynaptic','Dorsal Postsynaptic','Ventral Presynaptic','Ventral Postsynaptic'})
+xticklabels({'Dorsal Presynaptic','Ventral Presynaptic','Dorsal Postsynaptic','Ventral Postsynaptic'})
 ylabel('Synapse Similarity')
 set(gca,'FontSize',18)
 
@@ -298,8 +298,7 @@ end
 
 %% Similarity Matrices 
 % Generates one half at a time with different colormaps.  Switch lines
-% 186/7, 213/14, 226/7, and 254/5 to generate upper and lower halves for
-% pre/post
+% to generate upper and lower halves for pre/post
 
 %Dorsal pre-similarity
 lindex_d = an_in.Lineage_Index(an_in.DV_Index==1 & an_in.Side_Index == 1) % Get lineage index for dorsal hemilineages on one side.
@@ -310,10 +309,11 @@ M = ones(size(pre_sim_d))
 M_up = boolean(tril(M))
 M_low = boolean(triu(M))
 sim_d = nan(size(pre_sim_d))
-sim_d(M_up) = pre_sim_d(M_up)
-%sim_d(M_low) = post_sim_d(M_low); clear M and M_up and M_low
+%sim_d(M_up) = pre_sim_d(M_up) %PRE
+sim_d(M_low) = post_sim_d(M_low); %POST
+clear M and M_up and M_low
 
-imagesc(sim_d,[0,1]); axis xy
+imagesc(sim_d,[0,.5]); axis xy
 yticks(1:length(pre_sim_d))
 yticklabels(an_in.Names(an_in.DV_Index==1 & an_in.Side_Index == 1 ))
 xticks([])
@@ -336,8 +336,8 @@ for k = 1:numel(lab) % for every type of lable
 ax.YAxis.TickLabels = repelem('  ',max(cellfun(@numel,lab)));
 set(gca,'FontSize',18)
 end
-%colormap(cbrewer('seq','Blues',64))
-colormap(cbrewer('seq','Oranges',64))
+%colormap(cbrewer('seq','Blues',64)) % PRE
+colormap(cbrewer('seq','Oranges',64)) % POST
 
 title('Dorsal Synaptic Similarity')
 
@@ -348,10 +348,11 @@ subplot(1,2,2)
 M = ones(size(pre_sim_v))
 M_up = boolean(tril(M))
 M_low = boolean(triu(M))
-sim_v = nan(size(pre_sim_v))
-sim_v(M_up) = pre_sim_v(M_up)
-%sim_v(M_low) = post_sim_v(M_low); clear M and M_up and M_low
-imagesc(sim_v,[0,1]); axis xy
+sim_v = nan(size(pre_sim_v)) 
+%sim_v(M_up) = pre_sim_v(M_up) %PRE
+sim_v(M_low) = post_sim_v(M_low); %POST
+clear M and M_up and M_low 
+imagesc(sim_v,[0,.5]); axis xy
 axis xy
 yticks(1:length(pre_sim_v))
 yticklabels(an_in.Names(an_in.DV_Index==0 & an_in.Side_Index == 1 ))
@@ -377,8 +378,8 @@ set(gca,'FontSize',18)
 end
 c = colorbar
 c.Label.String = 'Synapse Similarity'
-colormap(cbrewer('seq','Blues',64))
-%colormap(cbrewer('seq','Oranges',64))
+%colormap(cbrewer('seq','Blues',64)) % PRE
+colormap(cbrewer('seq','Oranges',64)) % POST
 title('Ventral Synaptic Similarity')
 
 
