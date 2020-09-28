@@ -1,4 +1,5 @@
 function [output_vars] = birth_order_metricsv3(nl,direction,suppress_figs,savefigs,directory)
+
 if direction == 1
     in_out_dist = 'presynaptic';
     in_out_dvs = 'presynaptic';
@@ -19,8 +20,9 @@ elseif direction == 3
     io_dvs = 3;
 else error('Incorrect Direction')
 end
-an_nl = parse_annotations(nl,1);
 
+
+an_nl = parse_annotations(nl,1);
 if unique(an_nl.DV_Index) == 1
     dv = 'Dorsal'
 elseif unique(an_nl.DV_Index == 0)
@@ -28,31 +30,24 @@ elseif unique(an_nl.DV_Index == 0)
 else
     warning('Not a hemilineage')
 end
+
 lineage = unique(an_nl.Lineage)
 distance = [0,.39,.64,.85,1.2];
 map = [.25,.9,.9; .25,.25,.9; .9,.55,.25 ;.9,.25,.25]
 
-edges = [nl(:).Temporal_Cohort]
+cohorts = [nl(:).Temporal_Cohort]
 d = [nl(:).Mean_Neuropil_Distance]
 
 %% synapse_distributions
 
-% f1 = figure('pos',[1975 153 1375 715],'rend','painters'); hold on
-% set(0, 'CurrentFigure', f1)
-
-for i = 1:max(edges)
-    cohort_list{i} = nl(edges == i)
+for i = 1:max(cohorts)
+    cohort_list{i} = nl(cohorts == i)
 end
 tmap = map(~cellfun('isempty',cohort_list),:)
 cohort_list(cellfun('isempty',cohort_list)) = []
 
 plot_synapse_distributions(cohort_list,tmap,io_dist,.5)
 clear cohort_list and tmap
-% Synapse_Distributions(nl(1),map(edges(1),:),io_dist,.5,1)
-% for i = 2:length(nl)
-%     set(0, 'CurrentFigure', f1)
-%     Synapse_Distributions(nl(i),map(edges(i),:),io_dist,.5,0)
-% end
 
 if savefigs == 1
     saveas(gcf,strcat(directory,'/',char(lineage),dv,in_out_dist,'_Distributions'),'svg')
@@ -60,14 +55,12 @@ if savefigs == 1
 else
 end
 
-
 %% Skeletons
 figure('pos',[1975 153 1375 1375]); hold on
 for i = 1:length(nl)
-    plot_neurons(nl(i),map(edges(i),:),1,3,1,0);
+    plot_neurons(nl(i),map(cohorts(i),:),1,3,1,0);
 end
-
-    
+  
 camlight;
 axis off; 
 axis equal;
@@ -87,19 +80,20 @@ end
 
     
 %% Dotplot Neuropil Distnace
+
 figure('pos',[1,1,200,1000]); hold on
 
-%errorbar(mean(d),std(d),'LineWidth',2,'Color','k')
-plot([.9,1.1],[mean(d),mean(d)],'k','LineWidth',2)
+plot([.9,1.1],[mean(d)/1000,mean(d)/1000],'k','LineWidth',2)
 for i = 1:length(nl)
-    scatter(1,d(i),500,'o','MarkerEdgeColor','k','MarkerFaceColor',map(edges(i),:))
+    scatter(1,d(i)/1000,500,'o','MarkerEdgeColor','k','MarkerFaceColor',map(cohorts(i),:))
 end
 xlim([0 2])
 xticks([])
+ylim([0 30])
 
 set (gca,'Ydir','reverse')
-ylabel('Distance from Neuropil (nm)')
-set(gca,'FontSize',18)
+ylabel('Distance from Neuropil (µm)')
+set(gca,'FontSize',24)
 set(gcf,'Color','w')
 
 if savefigs == 1
@@ -109,10 +103,9 @@ else
 end
 
 
-
 %% Cluster synapses and color labels by birth order
 d_half = d(1:2:end)
-edges_half = edges(1:2:end)
+cohorts_half = cohorts(1:2:end)
 
 clear empty_ind
 for i = 1:length(nl)
@@ -125,26 +118,26 @@ for i = 1:length(nl)
     end
 end
 nl = nl(boolean(empty_ind))
-edges = edges(boolean(empty_ind))
+cohorts = cohorts(boolean(empty_ind))
 
 if direction < 3
-    sim_mat_l = synapse_similarity_v2(nl(an_nl.Side_Index == 0),4000,3,[],direction)
-    sim_mat_r = synapse_similarity_v2(nl(an_nl.Side_Index == 1),4000,3,[],direction)
+    sim_mat_l = synapse_similarity_v2(nl(an_nl.Side_Index == 0),2000,3,[],direction)
+    sim_mat_r = synapse_similarity_v2(nl(an_nl.Side_Index == 1),2000,3,[],direction)
     sim_mat = .5*(sim_mat_l + sim_mat_r)
 elseif direction == 3
-    presim_mat_l = synapse_similarity_v2(nl(an_nl.Side_Index == 0),4000,3,[],1)
-    presim_mat_r = synapse_similarity_v2(nl(an_nl.Side_Index == 1),4000,3,1)
+    presim_mat_l = synapse_similarity_v2(nl(an_nl.Side_Index == 0),2000,3,[],1)
+    presim_mat_r = synapse_similarity_v2(nl(an_nl.Side_Index == 1),2000,3,1)
     presim_mat = .5*(presim_mat_l + presim_mat_r)
     
-    postsim_mat_l = synapse_similarity_v2(nl(an_nl.Side_Index == 0),4000,3,[],2)
-    postsim_mat_r = synapse_similarity_v2(nl(an_nl.Side_Index == 1),4000,3,[],2)
+    postsim_mat_l = synapse_similarity_v2(nl(an_nl.Side_Index == 0),2000,3,[],2)
+    postsim_mat_r = synapse_similarity_v2(nl(an_nl.Side_Index == 1),2000,3,[],2)
     postsim_mat = .5*(postsim_mat_l + postsim_mat_r)
     sim_mat = (presim_mat+postsim_mat)*.5;
 else error('Wrong Direction')
 end
 
 [h1 t1 perm1 Z] = Synapse_Distance_Clustering_v2(sim_mat,[nl(an_nl.Side_Index == 0).Names],0,0)
-reordered_edges = edges_half(perm1);
+reordered_cohorts = cohorts_half(perm1);
 subplot(3,4,[1 5 9]);
 ax = get(gca)
 lab = ax.YAxis.TickLabels
@@ -157,7 +150,7 @@ end
 loc = ax.YAxis.TickValues;
 for k = 1:numel(lab) % for every type of lable
     x = repelem(ax.XAxis.Limits(1)-0.01,1); % make an x position vector
-    text(x,loc(k),lab(k),'Color',map(reordered_edges(k),:)); % place this lable at the same locations with a distinct color:
+    text(x,loc(k),lab(k),'Color',map(reordered_cohorts(k),:)); % place this lable at the same locations with a distinct color:
     ax.YAxis.TickLabels = []; % remove the original labels
     ax.YAxis.TickLabels = repelem('  ',max(cellfun(@numel,lab))); % replace the original labels with white space, to keep the axes position:
     set(gca,'FontSize',18)
@@ -170,7 +163,7 @@ end
 %% Distance from Neuropil vs Similarity to other neurons in the hemilineage
 figure; hold on
 for i = 1:length(sim_mat)
-    scatter(d_half(i),mean(sim_mat(i,:)),200,'MarkerEdgeColor','k','MarkerFaceColor',map(edges_half(i),:),'MarkerEdgeAlpha',.5)
+    scatter(d_half(i),mean(sim_mat(i,:)),200,'MarkerEdgeColor','k','MarkerFaceColor',map(cohorts_half(i),:),'MarkerEdgeAlpha',.5)
     dist_vs_sim(i,:) = [d_half(i),mean(sim_mat(i,:))]
 end
 if savefigs == 1
@@ -180,9 +173,10 @@ else
 end
 
 % Measure the closest (youngest) neuron of the pair
-for i = 1:length(d)
-    for j = 1:length(d)
-        min_distance_matrix(i,j) = min([d(i),d(j)])
+for i = 1:length(d_half)
+    for j = 1:length(d_half)
+        min_distance_matrix(i,j) = min([d_half(i),d_half(j)])
+        mean_distance_matrix(i,j) = mean([d_half(i),d_half(j)])
     end
 end
         
@@ -236,15 +230,15 @@ for i = 1:100
     % it
     j = 0
     while j<1
-        t_d = edges_half(randi(length(edges_half),1));
-        if sum(edges_half==t_d) >= 2
+        t_d = cohorts_half(randi(length(cohorts_half),1));
+        if sum(cohorts_half==t_d) >= 2
             j = 1;
         else
             j = 0;
         end
     end
     % Get the synapse similarity matrix for the temporal cohort
-    temp_sim_d = sim_mat(edges_half==t_d,edges_half==t_d); clear t_d
+    temp_sim_d = sim_mat(cohorts_half==t_d,cohorts_half==t_d); clear t_d
     
     % Pick a pair from that temporal cohort and get their similarity, then
     % make sure the pair isn't self-self.
@@ -261,7 +255,7 @@ for i = 1:100
     %Pick two random neurons from the hemilineage, and get their similarity
     k = 0
     while k<1
-        t_rand = randi(length(edges_half),1,2);
+        t_rand = randi(length(cohorts_half),1,2);
         if t_rand(1) == t_rand(2)
             k = 0;
         else
@@ -281,12 +275,13 @@ if suppress_figs == 1
 else
 end
 
-output_vars.dist_vs_sim = dist_vs_sim
-output_vars.sim_mat = sim_mat
-output_vars.birth_order_distance = birth_order_distance
-output_vars.model = f
-output_vars.temporal_similarity = temporal_similarity
-output_vars.min_distance_matrix = min_distance_matrix
+output_vars.dist_vs_sim = dist_vs_sim;
+output_vars.sim_mat = sim_mat;
+output_vars.birth_order_distance = birth_order_distance;
+output_vars.model = f;
+output_vars.temporal_similarity = temporal_similarity;
+output_vars.min_distance_matrix = min_distance_matrix;
+output_vars.mean_distance_matrix = mean_distance_matrix;
 
 end
 
