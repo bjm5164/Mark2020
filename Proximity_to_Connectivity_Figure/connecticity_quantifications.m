@@ -1,4 +1,6 @@
-load m19_neurons.mat
+load mark2020_neurons_temporal_cohorts.mat
+an.Temporal_Cohort = zeros(length(an.DV_Index),1)
+an.Temporal_Cohort(an.Lineage_Index > 1 & an.Lineage_Index < 9) = an_in.Temporal_Cohort
 
 
 neuron_deg = get_adjacency(Neuron_List,1);
