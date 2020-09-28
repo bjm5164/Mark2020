@@ -171,12 +171,12 @@ end
 
 if isempty(mldv_points_counts) == 0
     if nargin == 4
-        subplot(3,7,[5,6,12,13,19,20])
+        subplot(3,7,[6,7,13,14,20,21])
         NPM.vertices = NPM.vertices(:,[1,3,2]);
         surfaces(NPM,'k',.02,3,[])
         %surfaces(NPM.v(:,[1,3,2]),'k',.02,'-');
     elseif draw_surface == 1
-        subplot(3,7,[5,6,12,13,19,20])
+        subplot(3,7,[6,7,13,14,20,21])
         NPM.vertices = NPM.vertices(:,[1,3,2]);
         surfaces(NPM,'k',.02,3,[])
         %surfaces(NPM.v(:,[1,3,2]),'k',.02,'-');
@@ -205,7 +205,9 @@ if isempty(mldv_points_counts) == 0
     ax_dv = gca;
     ax_dv.XAxisLocation = 'Top'; xticks([]);
     view([270, 90]); 
-    
+    yl = ylim;
+    yticks([yl(2)/2,yl(2)]);
+    ytickformat('%.0f')
    
     % Plot the M/L histogram
     subplot(3,7,[16 17 18]); hold on
@@ -223,10 +225,13 @@ if isempty(mldv_points_counts) == 0
     set(get(gca,'ylabel'),'rotation',0);
     ax_ml.XDir = 'reverse';
     linkaxes([ax_scat,ax_ml],'x');
+    yl = ylim;
+    yticks([yl(2)/2,yl(2)]);
+    ytickformat('%.0f')
     
     
     % Plot the AP Points
-    subplot(3,7,[5,6,12,13,19,20]); hold on;
+    subplot(3,7,[6,7,13,14,20,21]); hold on;
     scatter(apdv_points_plot(:,1),apdv_points_plot(:,2),polyadics_ap*100,'.','MarkerFaceColor',clr,'MarkerEdgeColor',clr,'MarkerFaceAlpha',alpha,'MarkerEdgeAlpha',alpha);
     ax_ap1 = gca; 
     ax_ap1.XAxisLocation = 'Top'; xticks([]);
@@ -237,7 +242,7 @@ if isempty(mldv_points_counts) == 0
     
     
     % Plot the AP histogram
-    ax_ap2 = subplot(3,7,[7,14,21]); hold on
+    ax_ap2 = subplot(3,7,[5,12,19]); hold on
     
     pd_apdv = fitdist(apdv_points_counts(:,2),'kernel','kernel','normal','BandWidth',2000);
     x1_apdv = axis_lims_APDV(1):800:axis_lims_APDV(2);
@@ -249,7 +254,9 @@ if isempty(mldv_points_counts) == 0
     ax_ap2.XAxisLocation = 'Top'
     ax_ap2.XDir = 'Reverse'
     xticks([]);
-    
+    yl = ylim;
+    yticks([(yl(2)/2),(yl(2))]);
+    ytickformat('%.0f')
     %scatter(x1_apdv(y1_apdv==max(y1_apdv)),max(y1_apdv)+.1*max(y1_apdv),20,'MarkerFaceColor',clr','MarkerEdgeColor','k','MarkerFaceAlpha',.5,'MarkerEdgeAlpha',.5)
     hold off
     
