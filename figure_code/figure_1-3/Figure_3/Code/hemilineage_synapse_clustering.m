@@ -34,55 +34,106 @@ map(end-3,:) = [0 .6 1]
 %% Calculate synapse similarity 
 
 % Calculate presynapse similarity for neurons on left and right side.  
-pre_sim_l = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),2000,3,[],1);
-pre_sim_r = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),2000,3,[],1);
-pre_sim = (pre_sim_l + pre_sim_r)*.5 %Average similarities for left/right homologs
+synaptic_similarity.presynaptic.left  = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),2000,3,[],1);
+synaptic_similarity.presynaptic.right = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),2000,3,[],1);
+synaptic_similarity.presynaptic.combined = (synaptic_similarity.presynaptic.left + synaptic_similarity.presynaptic.right)*.5 %Average similarities for left/right homologs
 
 
 % Calculate postsynapse similarity for neurons on left and right sides.
-post_sim_l = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),2000,3,[],2);
-post_sim_r = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),2000,3,[],2);
-post_sim = (post_sim_l + post_sim_r)*.5 % Average similarities for left/right homologs
+synaptic_similarity.postsynaptic.left = synapse_similarity_v2(nl(an_in.Side_Index == 0 & an_in.DV_Index < 2),2000,3,[],2);
+synaptic_similarity.postsynaptic.right = synapse_similarity_v2(nl(an_in.Side_Index == 1 & an_in.DV_Index < 2),2000,3,[],2);
+synaptic_similarity.postsynaptic.combined = (synaptic_similarity.postsynaptic.left + synaptic_similarity.postsynaptic.right)*.5 % Average similarities for left/right homologs
 
 
 % Get just dorsal similarities
-pre_sim_l_d = pre_sim_l(an_half.DV_Index == 1, an_half.DV_Index == 1);
-pre_sim_r_d = pre_sim_l(an_half.DV_Index == 1,an_half.DV_Index == 1);
-pre_sim_d = (pre_sim_l_d + pre_sim_r_d)*.5;
+synaptic_similarity.dorsal.presynaptic.left = synaptic_similarity.presynaptic.left(an_half.DV_Index == 1, an_half.DV_Index == 1);
+synaptic_similarity.dorsal.presynaptic.right = synaptic_similarity.presynaptic.right(an_half.DV_Index == 1,an_half.DV_Index == 1);
+synaptic_similarity.dorsal.presynaptic.combined = (synaptic_similarity.dorsal.presynaptic.left + synaptic_similarity.dorsal.presynaptic.right)*.5;
 
-post_sim_l_d = post_sim_l(an_half.DV_Index == 1,an_half.DV_Index == 1);
-post_sim_r_d = post_sim_l(an_half.DV_Index == 1,an_half.DV_Index == 1);
-post_sim_d = (post_sim_l_d + post_sim_r_d)*.5;
+synaptic_similarity.dorsal.postsynaptic.left = synaptic_similarity.postsynaptic.left(an_half.DV_Index == 1,an_half.DV_Index == 1);
+synaptic_similarity.dorsal.postsynaptic.right = synaptic_similarity.postsynaptic.right(an_half.DV_Index == 1,an_half.DV_Index == 1);
+synaptic_similarity.dorsal.postsynaptic.combined = (synaptic_similarity.dorsal.postsynaptic.left + synaptic_similarity.dorsal.postsynaptic.right)*.5;
 
-comb_sim_d = (pre_sim_d+post_sim_d)*.5;
+synaptic_similarity.dorsal.combined = (synaptic_similarity.dorsal.presynaptic.combined+synaptic_similarity.dorsal.postsynaptic.combined)*.5;
 
 % Get just ventral similarities
-pre_sim_l_v = pre_sim_l(an_half.DV_Index == 0,an_half.DV_Index == 0);
-pre_sim_r_v = pre_sim_l(an_half.DV_Index == 0,an_half.DV_Index == 0);
-pre_sim_v = (pre_sim_l_v + pre_sim_r_v)*.5
+synaptic_similarity.ventral.presynaptic.left = synaptic_similarity.presynaptic.left(an_half.DV_Index == 0,an_half.DV_Index == 0);
+synaptic_similarity.ventral.presynaptic.right = synaptic_similarity.presynaptic.right(an_half.DV_Index == 0,an_half.DV_Index == 0);
+synaptic_similarity.ventral.presynaptic.combined = (synaptic_similarity.ventral.presynaptic.left + synaptic_similarity.ventral.presynaptic.right)*.5
 
-post_sim_l_v = post_sim_l(an_half.DV_Index == 0,an_half.DV_Index == 0);
-post_sim_r_v = post_sim_l(an_half.DV_Index == 0,an_half.DV_Index == 0);
-post_sim_v = (post_sim_l_v + post_sim_r_v)*.5
+synaptic_similarity.ventral.postsynaptic.left = synaptic_similarity.postsynaptic.left(an_half.DV_Index == 0,an_half.DV_Index == 0);
+synaptic_similarity.ventral.postsynaptic.right = synaptic_similarity.postsynaptic.right(an_half.DV_Index == 0,an_half.DV_Index == 0);
+synaptic_similarity.ventral.postsynaptic.combined = (synaptic_similarity.ventral.postsynaptic.left + synaptic_similarity.ventral.postsynaptic.right)*.5
 
-comb_sim_v = (pre_sim_v+post_sim_v)*.5;
+synaptic_similarity.ventral.combined = (synaptic_similarity.ventral.presynaptic.combined+synaptic_similarity.ventral.postsynaptic.combined)*.5;
+%%
 
 % Average similarity for pre and post synapses
-comb_sim = (pre_sim+post_sim)*.5
+synaptic_similarity.combined_similarity = (synaptic_similarity.presynaptic.combined+synaptic_similarity.postsynaptic.combined)*.5
 
+for i = 1:length(synaptic_similarity.presynaptic.left)
+    precorco = corrcoef(synaptic_similarity.presynaptic.left(i,:),synaptic_similarity.presynaptic.right(i,:))
+    pre_cor(i) = precorco(1,2)
+    
+    postcorco = corrcoef(synaptic_similarity.postsynaptic.left(i,:),synaptic_similarity.postsynaptic.right(i,:))
+    post_cor(i) = postcorco(1,2)
+    
+    lr_diff_pre(i,:) = synaptic_similarity.presynaptic.left(i,:)-synaptic_similarity.presynaptic.right(i,:)
+    lr_diff_post(i,:) = synaptic_similarity.postsynaptic.left(i,:)-synaptic_similarity.postsynaptic.right(i,:)
+end
+
+figure; hold on
+histogram(pre_cor,.7:.01:1,'FaceColor','c','Normalization','probability')
+histogram(post_cor,.7:.01:1,'FaceColor','r','Normalization','probability')
+xlabel('Left / Right Homolog correlation coefficient')
+ylabel('Frequency')
+legend({'Presynaptic Similarity','Postsynaptic Similarity'})
+set(gca,'FontSize',18)
+[h,p] = kstest2(pre_cor,post_cor)
+
+
+figure; hold on 
+histogram(lr_diff_pre(:),-.45:.02:.45,'FaceColor','c','Normalization','probability')
+histogram(lr_diff_post(:),-.45:.02:.45,'FaceColor','r','Normalization','probability')
+xlabel('Left / Right Homolog Difference')
+ylabel('Frequency')
+legend({'Presynaptic Similarity','Postsynaptic Similarity'})
+set(gca,'FontSize',18)
+[h,p] = kstest2(lr_diff_pre(:),lr_diff_post(:))
+
+fraction_larger_pre = sum(abs(lr_diff_pre(:))>.03)/numel(lr_diff_pre)
+fraction_larger_post = sum(abs(lr_diff_post(:))>.01)/numel(lr_diff_post)
+
+%% Calculate covarience matrix for left/right 
+cov_mat = corrcov(synaptic_similarity.presynaptic.left,synaptic_similarity.postsynaptic.right)
+
+%%
 % Remove self-comparisons
-pre_sim_l(pre_sim_l == 1) = []
-pre_sim_r(pre_sim_r == 1) = []
-post_sim_l(post_sim_l == 1) = []
-post_sim_r(post_sim_r == 1) = []
+synaptic_similarity.presynaptic.left(synaptic_similarity.presynaptic.left == 1) = []
+synaptic_similarity.presynaptic.right(synaptic_similarity.presynaptic.right == 1) = []
+synaptic_similarity.postsynaptic.left(synaptic_similarity.postsynaptic.left == 1) = []
+synaptic_similarity.postsynaptic.right(synaptic_similarity.postsynaptic.right == 1) = []
+
+synaptic_similarity.dorsal.presynaptic.left(synaptic_similarity.dorsal.presynaptic.left == 1) = []
+synaptic_similarity.dorsal.presynaptic.right(synaptic_similarity.dorsal.presynaptic.right == 1) = []
+synaptic_similarity.dorsal.postsynaptic.left(synaptic_similarity.dorsal.postsynaptic.left == 1) = []
+synaptic_similarity.dorsal.postsynaptic.right(synaptic_similarity.dorsal.postsynaptic.right == 1) = []
+
+synaptic_similarity.ventral.presynaptic.left(synaptic_similarity.ventral.presynaptic.left == 1) = []
+synaptic_similarity.ventral.presynaptic.right(synaptic_similarity.ventral.presynaptic.right == 1) = []
+synaptic_similarity.ventral.postsynaptic.left(synaptic_similarity.ventral.postsynaptic.left == 1) = []
+synaptic_similarity.ventral.postsynaptic.right(synaptic_similarity.ventral.postsynaptic.right == 1) = []
 
 % Calculate left/right correlation coefficients. 
-pre_cor = corrcoef(pre_sim_l,pre_sim_r)
-post_cor = corrcoef(post_sim_l,post_sim_r)
+pre_cor = corrcoef(synaptic_similarity.presynaptic.left,synaptic_similarity.presynaptic.right)
+post_cor = corrcoef(synaptic_similarity.postsynaptic.left,synaptic_similarity.postsynaptic.right)
+
+
+
 
 % Plot left vs right pre/post synapse similarity.
 figure; subplot(2,1,1)
-scatter(pre_sim_l(:),pre_sim_r(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','r','MarkerEdgeColor','k')
+scatter(synaptic_similarity.presynaptic.left(:),synaptic_similarity.presynaptic.right(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','r','MarkerEdgeColor','k')
 xlabel('Synapse Similarity Left')
 ylabel('Synapse Similarity Right')
 set(gca,'FontSize',14)
@@ -91,7 +142,7 @@ xlim([0,1])
 ylim([0,1])
 legend({'Presynapses'})
 subplot(2,1,2)
-scatter(post_sim_l(:),post_sim_r(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','c','MarkerEdgeColor','k')
+scatter(synaptic_similarity.postsynaptic.left(:),synaptic_similarity.postsynaptic.right(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','c','MarkerEdgeColor','k')
 xlabel('Synapse Similarity Left')
 ylabel('Synapse Similarity Right')
 set(gca,'FontSize',14)
@@ -99,7 +150,7 @@ axis equal
 xlim([0,1])
 ylim([0,1])
 legend({'Postsynapses'})
-
+%%
 clear pre_sim_l and pre_sim_r and pre_sim_l_d and pre_sim_r_d and pre_sim_l_v and pre_sim_r_v and post_sim_l and post_sim_r and post_sim_l_d ...
     and post_sim_r_d and post_sim_l_v and post_sim_r_v 
 %% Look at pre- and post- synaptic similarity of dorsal and ventral hemilineages 
@@ -108,7 +159,7 @@ dorsal_an = an_half(an_half.DV_Index == 1,:)
 dorsal_index = unique(dorsal_an(:,[2,4]),'rows');
 
 % Get presynapse similarity for dorsal hemilineages
-similarity_matrix = pre_sim_d
+similarity_matrix = synaptic_similarity.dorsal.presynaptic.combined
 for i = 1:length(dorsal_index.DV_Index)
     related_index_h = ismember(dorsal_an(:,[2,4]),dorsal_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(dorsal_an(:,4),dorsal_index(i,2))*-1)+1)
@@ -123,7 +174,7 @@ end
 clear similarity_matrix 
 
 % Get postsynapse similarity for dorsal hemilineages
-similarity_matrix = post_sim_d
+similarity_matrix = synaptic_similarity.dorsal.postsynaptic.combined
 for i = 1:length(dorsal_index.DV_Index)
     related_index_h = ismember(dorsal_an(:,[2,4]),dorsal_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(dorsal_an(:,4),dorsal_index(i,2))*-1)+1)
@@ -142,7 +193,7 @@ ventral_an = an_half(an_half.DV_Index == 0,:);
 ventral_index = unique(ventral_an(:,[2,4]),'rows'); 
 
 % Get presynapse similarity for ventral hemilineages
-similarity_matrix = pre_sim_v
+similarity_matrix = synaptic_similarity.ventral.presynaptic.combined
 for i = 1:length(ventral_index.DV_Index)
     related_index_h = ismember(ventral_an(:,[2,4]),ventral_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(ventral_an(:,4),ventral_index(i,2))*-1)+1);
@@ -157,7 +208,7 @@ end
 clear similarity_matrix
 
 % Get postsynapse similarity for ventral hemilineages 
-similarity_matrix = post_sim_v
+similarity_matrix = synaptic_similarity.ventral.postsynaptic.combined
 for i = 1:length(ventral_index.DV_Index)
     related_index_h = ismember(ventral_an(:,[2,4]),ventral_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(ventral_an(:,4),ventral_index(i,2))*-1)+1);
@@ -228,7 +279,7 @@ nanmean(ventral_postsynaptic)/nanmean(ventral_postsynaptic_unrelated)
 lindex_d = an_in.Lineage_Index(an_in.DV_Index==1 & an_in.Side_Index == 1) % Get lineage index for dorsal hemilineages on one side.
 d_lin = unique(lindex_d) 
 
-[h1 t1 permd Z] = Synapse_Distance_Clustering_v2(comb_sim_d,an_in.Names(an_in.DV_Index==1 & an_in.Side_Index == 1 ),7,0) % Cluster dorsal neurons by synapse similarity.
+[h1 t1 permd Z] = Synapse_Distance_Clustering_v2(synaptic_similarity.dorsal.combined,an_in.Names(an_in.DV_Index==1 & an_in.Side_Index == 1 ),7,0) % Cluster dorsal neurons by synapse similarity.
 reordered_hemi = lindex_d(permd);
 
 % Recolor labels to match lineages
@@ -263,7 +314,7 @@ end
 lindex_v = an_in.Lineage_Index(an_in.DV_Index==0 & an_in.Side_Index == 1) % Get lineage index for ventral hemilienages on one side.
 v_lin = unique(lindex_v)
 
-[h1 t1 permv Z] = Synapse_Distance_Clustering_v2(comb_sim_v,an_in.Names(an_in.DV_Index==0 & an_in.Side_Index == 1 ),7,0) % Cluster ventral neurons by synapse similarity.
+[h1 t1 permv Z] = Synapse_Distance_Clustering_v2(synaptic_similarity.ventral.combined,an_in.Names(an_in.DV_Index==0 & an_in.Side_Index == 1 ),7,0) % Cluster ventral neurons by synapse similarity.
 reordered_hemi = lindex_v(permv);
 
 % Recolor labels to match lineages.
@@ -305,16 +356,16 @@ lindex_d = an_in.Lineage_Index(an_in.DV_Index==1 & an_in.Side_Index == 1) % Get 
 
 figure('pos',[1400,100,1200,500]); 
 subplot(1,2,1)
-M = ones(size(pre_sim_d))
+M = ones(size(synaptic_similarity.dorsal.presynaptic.combined))
 M_up = boolean(tril(M))
 M_low = boolean(triu(M))
-sim_d = nan(size(pre_sim_d))
-%sim_d(M_up) = pre_sim_d(M_up) %PRE
-sim_d(M_low) = post_sim_d(M_low); %POST
+sim_d = nan(size(synaptic_similarity.dorsal.presynaptic.combined))
+%sim_d(M_up) = synaptic_similarity.dorsal.presynaptic.combined(M_up) %PRE
+sim_d(M_low) = synaptic_similarity.dorsal.postsynaptic.combined(M_low); %POST
 clear M and M_up and M_low
 
 imagesc(sim_d,[0,.5]); axis xy
-yticks(1:length(pre_sim_d))
+yticks(1:length(synaptic_similarity.dorsal.presynaptic.combined))
 yticklabels(an_in.Names(an_in.DV_Index==1 & an_in.Side_Index == 1 ))
 xticks([])
 ax = get(gca);
@@ -345,16 +396,16 @@ title('Dorsal Synaptic Similarity')
 % Ventral pre-similarity
 lindex_v = an_in.Lineage_Index(an_in.DV_Index==0 & an_in.Side_Index == 1) % Get lineage index for ventral hemilienages on one side.
 subplot(1,2,2)
-M = ones(size(pre_sim_v))
+M = ones(size(synaptic_similarity.ventral.presynaptic.combined))
 M_up = boolean(tril(M))
 M_low = boolean(triu(M))
-sim_v = nan(size(pre_sim_v)) 
-%sim_v(M_up) = pre_sim_v(M_up) %PRE
-sim_v(M_low) = post_sim_v(M_low); %POST
+sim_v = nan(size(synaptic_similarity.ventral.presynaptic.combined)) 
+%sim_v(M_up) = synaptic_similarity.ventral.presynaptic.combined(M_up) %PRE
+sim_v(M_low) = synaptic_similarity.ventral.postsynaptic.combined(M_low); %POST
 clear M and M_up and M_low 
 imagesc(sim_v,[0,.5]); axis xy
 axis xy
-yticks(1:length(pre_sim_v))
+yticks(1:length(synaptic_similarity.ventral.presynaptic.combined))
 yticklabels(an_in.Names(an_in.DV_Index==0 & an_in.Side_Index == 1 ))
 xticks([])
 ax = get(gca);
