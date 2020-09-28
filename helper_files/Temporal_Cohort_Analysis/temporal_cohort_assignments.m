@@ -4,7 +4,9 @@ function [Neuron_List] = temporal_cohort_assignments(Neuron_List,method,normaliz
 %               Cell_body: Distance clustering of the cell 
 %               bodies of each lineage, and then assigns a temporal cohort 
 %               based on the mean cortex neurite length for that cluster 
-%               of cell bodies.
+%               of cell bodies. Setting a small bandwidth is the equivalent
+%               to binning neurons by the specified limits. 
+%
 %               Cortex_neurite: Uses a kernel density estimate of cortex
 %               neurite lenghts for a given lineage and looks for minima in
 %               the density estimate to generate clusters of cells which
@@ -19,7 +21,8 @@ function [Neuron_List] = temporal_cohort_assignments(Neuron_List,method,normaliz
 %               call normalized neurite distance to determine the cortex
 %               neurite lenghts.  It essentially measures the with of the
 %               cortex where the lineage is and normalizes the cortex
-%               neurite length to that length.
+%               neurite length to that length. **CURRENTLY UNDER
+%               DEVELOPMENT**
 %               
 %               bandwidth: A distance in nm. This will change depending on
 %               which method you use.  For cell_body, 5000 works well,
@@ -30,6 +33,8 @@ function [Neuron_List] = temporal_cohort_assignments(Neuron_List,method,normaliz
 %               
 %               Bilateral:  If the dataset is bilateral, it will average
 %               the cortex neurite lengths for the l/r homologs.
+
+
 % Outputs:      Neuron_List with temporal cohorts added.
 %               
 
