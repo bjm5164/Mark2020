@@ -4,6 +4,13 @@
 
 load mark2020_neurons_temporal_cohorts.mat
 load 200507_potential_adjacency
+savefigs = input('Save figs? 1:yes 0:no')
+if savefigs == 1
+    directory = '/Users/brandon/Documents/MATLAB/Repositories/Mark2020/Proximity_to_Connectivity_Figure/Figures'
+else
+    directory = 0
+end
+
 
 % Potential adjacency w/ 5000um bandwidth for density calculation
 potential_adj = potential_adjacency{5}
@@ -16,22 +23,23 @@ sim_post_to_pre = sim_mat'; % sim_mat(i,j) is how similar postsynapses of neuron
 sim_mat(boolean(eye(size(sim_mat)))) = 0 % Set self-self similarity to 0
 
 % Fractional adjacency matrix
-adj_frac = get_adjacency(nl,1)
-adj_frac(adj_frac<.01) = 0;
+adj_frac = get_adjacency(nl,1,.01)
+adj_frac(boolean(eye(size(adj_frac)))) = 0 % Set self-self similarity to 0
 
 
 % Real adjacency matrix 
-adj_real = get_adjacency(nl,0)
-adj_real(adj_real<2) = 0
+adj_real = get_adjacency(nl,0,2)
+adj_real(boolean(eye(size(adj_real)))) = 0 % Set self-self similarity to 0
+
 
 %% Look at number of synapses versus similarity.
 % The number of zeros is hard to read on a scatter, so let's remove them
 % and plot them separately as a histogram.
 
-connected_idx = find(adj_frac(:)>0);
+connected_idx = find(adj_real(:)>0);
 
 figure; subplot(2,1,1); hold on
-scatter(sim_mat(connected_idx),adj_frac(connected_idx),20,'o','MarkerFaceColor','k','MarkerEdgeColor','k','MarkerFaceAlpha',.5)
+scatter(sim_mat(connected_idx),adj_real(connected_idx),20,'o','MarkerFaceColor','k','MarkerEdgeColor','k','MarkerFaceAlpha',.5)
 xlabel('Pre/Post Similarity')
 ylabel('Connection Strength (fraction of total iput)')
 %lm = fitlm(sim_mat(connected_idx),adj_real(connected_idx))
@@ -39,14 +47,18 @@ ylabel('Connection Strength (fraction of total iput)')
 set(gca,'FontSize',14)
 xlim([0,1])
 subplot(2,1,2);
-histogram(sim_mat(setdiff([1:numel(sim_mat)],connected_idx)),0:.1:1,'FaceColor','k','FaceAlpha',.5,'Normalization','probability')
+histogram(sim_mat(setdiff([1:numel(sim_mat)],connected_idx)),0:.1:1,'FaceColor','k','FaceAlpha',.5)
 xlabel('Pre/Post Similarity')
 ylabel('Frequency')
 set(gca,'FontSize',14)
 xlim([0,1])
 set(gca,'YScale','log')
 
-
+if savefigs == 1
+    saveas(gcf,strcat(directory,'/','overlap_versus_connection_strength'),'svg')
+    close all
+else
+end
 
 %% Look at the number of connections
 
@@ -83,11 +95,17 @@ xlabel('Pre-Post Similarity')
 ylabel('Frequency')
 set(gca,'YScale','log')
 
+if savefigs == 1
+    saveas(gcf,strcat(directory,'/','overlap_versus_connection_density'),'svg')
+    close all
+else
+end
+
 %% Now look at connection probabilities for temporal cohorts.
 
-neuron_deg = adj_frac
+neuron_deg = adj_real
 neuron_deg(neuron_deg>0) = 1
-sim_to_use = sim_pre_to_post;
+sim_to_use = synapse_similarity_v2(nl,2000,3,[],1);
 sim_thresh = [0:.1:.3]
 
 [co_target_prob,co_target_fraction,neurons_used,similarity_distributions] = temporal_cohort_co_targeting(nl,an_in,sim_to_use,neuron_deg)
