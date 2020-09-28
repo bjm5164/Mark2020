@@ -1,3 +1,5 @@
+% Used for generating temporal cohorts.
+
 %% Load neurons
 load Hb
 load Cas
@@ -54,8 +56,8 @@ set (gca,'Xdir','reverse')
 
 % Set cohort edge limits
 cohort_edge_lims(1) = 0
-cohort_edge_lims(2) = mean(hb_neuropil_distances)+std(hb_neuropil_distances)
-cohort_edge_lims(3) = mean(cas_neuropil_distances)-std(cas_neuropil_distances)
+cohort_edge_lims(2) = mean(hb_neuropil_distances)+(std(hb_neuropil_distances))
+cohort_edge_lims(3) = mean(cas_neuropil_distances)-(std(cas_neuropil_distances))
 cohort_edge_lims(4) = mean(cas_neuropil_distances)
 
 %final edge is the longest cortex neurite in the dataset
@@ -73,3 +75,59 @@ an_in.Temporal_Cohort = transpose([nl(:).Temporal_Cohort])
 
 lineages = arrayfun(@(x) nl(an_in.Lineage_Index == x), min(an_in.Lineage_Index):max(an_in.Lineage_Index),'UniformOutput',false);
 lindex = arrayfun(@(x) an_in.Lineage(an_in.Lineage_Index == x), min(an_in.Lineage_Index):max(an_in.Lineage_Index),'UniformOutput',false);
+
+map = [.25,.9,.9; .25,.25,.9; .9,.55,.25 ;.9,.25,.25]
+figure; hold on
+for i = 1:length(lineages)
+    linnpd = [lineages{i}(:).Mean_Neuropil_Distance];
+    linc = [lineages{i}(:).Temporal_Cohort];
+    for ii = 1:max(linc)
+        scatter(ones(length(linnpd(linc == ii)),1)+i,linnpd(linc == ii),500,'o','MarkerEdgeColor','k','MarkerFaceColor',map(ii,:),'MarkerEdgeAlpha',.75,'MarkerFaceAlpha',.75)   
+    end
+end
+
+xticks([2:length(lineages)+1])
+xticklabels(unique(an_in.Lineage))
+ylabel('Normalized Neuropil Distance')
+c = colorbar
+c.Ticks=[.2,.5,.85]
+c.TickLabels = {'Early','Mid','Late'}
+c.Label.String = {'Temporal Cohort'}
+colormap(map)
+set(gca,'Ydir','Reverse')
+set(gca,'FontSize',18)
+
+%% Plot the skeletons
+load Neuropil_Mesh_Object.mat
+savefigs = input('Save Figures? 1:Yes 0:no')
+
+if savefigs == 1
+    directory = uigetdir
+else
+    directory = 0
+end
+for i = length(lineages):-1:1
+    figure('pos',[1975 153 1375 1375]); hold on
+    ltc = [lineages{i}(:).Temporal_Cohort]
+    surfaces([NPM.v(NPM.v(:,3)> 115550 & NPM.v(:,3)< 144000,1),NPM.v(NPM.v(:,3)> 115550 & NPM.v(:,3)< 144000,2)],'k',.05,'-')    
+    for kk = max(ltc):-1:1
+        if length(lineages{i}(ltc==kk))>0
+        plot_neurons(lineages{i}(ltc==kk),map(kk,:),1,2,1,0)     
+        else
+        end
+    end
+    view([190 90]);
+    camlight ;
+    axis off;
+    set(gcf,'Color','w');
+    xlim([.8e4,11e4])
+    ylim([5.75e4,12e4])        
+
+    axis equal;
+    if savefigs == 1
+        print(gcf,strcat(directory,'/',char(unique(lindex{i})),'_Temporal_Skeletons2'),'-dtiff','-r300')
+    close all
+    else
+    end
+    
+end
