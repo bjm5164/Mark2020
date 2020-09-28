@@ -1,13 +1,42 @@
-d_vals = reshape(dists,numel(dists),1);
-d_m = []
-for i = 1:length(d_vals)
-    d_1 = cat(2,d_vals{i}{:});
-    d_m = [d_m,d_1];
-end
+load mark2020_neurons_temporal_cohorts.mat
+[sim_mat,dists] = synapse_similarity_io_overlap(nl,2000,5000);
+%%
+figure; 
+histogram(dists,10,'Normalization','probability')
+xlabel('Distance between pre/post synapse (µm)')
+ylabel('Frequency')
 
 %%
-D = 0:10:6000;
-sigma = 1000:1000:10000;
+for i = 1:length(nl)
+    tl = get_twigs(nl(i),2);
+    if i == 1
+        twig_lengths = tl;
+    else
+        twig_lengths = [twig_lengths,tl];
+    end
+    clear tl
+    
+end
+%% 
+twig_lengths(isnan(twig_lengths)) = []
+
+figure; hold on
+bar(1,mean(dists),'FaceColor',[.2 .2 .2])
+errorbar(1,mean(dists),std(dists),'k')
+bar(2,mean(twig_lengths),'FaceColor',[.5 .5 .5])
+errorbar(2,mean(twig_lengths),std(twig_lengths),'k')
+
+figure; 
+histogram(twig_lengths,20)
+set(gca,'YScale','log')
+
+
+%%
+D = 0:1:3000;
+sigma = 0:500:5000;
+
+D = D./1000;
+sigma = sigma./1000
 map = plasma(length(sigma));
 figure; 
 for i = 1:length(sigma)
@@ -26,7 +55,7 @@ end
 colormap(map)
 
 subplot(2,4,[1,2,3,5,6,7])
-ylabel('Convolved Distance')
+ylabel('Similarity')
 xlabel('Distance')
 set(gca,'FontSize',18)
 subplot(2,4,[4,8])
@@ -34,8 +63,8 @@ ylabel('Frequency')
 set(gca,'FontSize',18)
 c = colorbar
 c.Label.String = 'Sigma'
-c.Ticks=[0:.1:1]
-c.TickLabels=[1000:1000:10000]
+c.Ticks=[.1:.1:1]
+c.TickLabels=[.1:.1:10]
 
 %%
 sigma = 1000:1000:5000
