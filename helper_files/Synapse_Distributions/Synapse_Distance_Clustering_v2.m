@@ -5,8 +5,7 @@ else
     clusters = 0;
 end
 cmap =cbrewer('seq', 'Blues',64)
-d_mat = 1-sim_mat;
-dist = squareform(d_mat);
+
 
 if nargin == 3
    dis_sim = input('Distance (1) / Similarity (0)')
@@ -14,8 +13,11 @@ else
 end
 
 if dis_sim == 1
+        d_mat = 1-sim_mat;
+        dist = squareform(d_mat);  
         mat = d_mat;
-    else
+else
+        dist = pdist(sim_mat,'cosine')
         mat = sim_mat;
 end
 % eva_gap = evalclusters(sim_mat,'linkage','gap','KList',[1:20])
@@ -24,7 +26,7 @@ display('doing cluster')
 tic, Z = linkage(dist,'average'); toc
 leafOrder = optimalleaforder(Z,dist,'Transformation','inverse')
 
-figure;
+% figure;
 [h2 T perm2] = dendrogram(Z,0,'Orientation','Left','ColorThreshold' ,.8,'Labels',Names,'Reorder',leafOrder)
 
 %figure 
