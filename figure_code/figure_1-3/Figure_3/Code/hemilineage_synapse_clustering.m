@@ -104,8 +104,6 @@ set(gca,'FontSize',18)
 fraction_larger_pre = sum(abs(lr_diff_pre(:))>.03)/numel(lr_diff_pre)
 fraction_larger_post = sum(abs(lr_diff_post(:))>.01)/numel(lr_diff_post)
 
-%% Calculate covarience matrix for left/right 
-cov_mat = corrcov(synaptic_similarity.presynaptic.left,synaptic_similarity.postsynaptic.right)
 
 %%
 % Remove self-comparisons
@@ -133,7 +131,7 @@ post_cor = corrcoef(synaptic_similarity.postsynaptic.left,synaptic_similarity.po
 
 % Plot left vs right pre/post synapse similarity.
 figure; subplot(2,1,1)
-scatter(synaptic_similarity.presynaptic.left(:),synaptic_similarity.presynaptic.right(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','r','MarkerEdgeColor','k')
+scatter(synaptic_similarity.presynaptic.left(:),synaptic_similarity.presynaptic.right(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','r','MarkerEdgeColor','r')
 xlabel('Synapse Similarity Left')
 ylabel('Synapse Similarity Right')
 set(gca,'FontSize',14)
@@ -142,7 +140,7 @@ xlim([0,1])
 ylim([0,1])
 legend({'Presynapses'})
 subplot(2,1,2)
-scatter(synaptic_similarity.postsynaptic.left(:),synaptic_similarity.postsynaptic.right(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','c','MarkerEdgeColor','k')
+scatter(synaptic_similarity.postsynaptic.left(:),synaptic_similarity.postsynaptic.right(:),100,'o','MarkerFaceAlpha',.15,'MarkerEdgeAlpha',.25,'MarkerFaceColor','c','MarkerEdgeColor','r')
 xlabel('Synapse Similarity Left')
 ylabel('Synapse Similarity Right')
 set(gca,'FontSize',14)
@@ -164,10 +162,12 @@ for i = 1:length(dorsal_index.DV_Index)
     related_index_h = ismember(dorsal_an(:,[2,4]),dorsal_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(dorsal_an(:,4),dorsal_index(i,2))*-1)+1)
     sr_h = similarity_matrix(related_index_h,related_index_h); % get pairwise similarities between them
+    sr_h = sr_h(boolean(triu(ones(size(sr_h)),1)))
+
+    
     sur_h = similarity_matrix(related_index_h,unrelated_index_h);
     sim_related = sr_h(:); clear sr_h
     sim_unrelated = sur_h(:); clear sur_h
-    sim_related(sim_related == 1) = []; % remove self-self comparisons
     dorsal_presynaptic_similarity{i} = sim_related(:); 
     dorsal_presynaptic_similarity_unrelated{i} = sim_unrelated(:); clear sim_related and related_index_h and sim_unrelated and unrelated_index_h
 end
@@ -179,10 +179,11 @@ for i = 1:length(dorsal_index.DV_Index)
     related_index_h = ismember(dorsal_an(:,[2,4]),dorsal_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(dorsal_an(:,4),dorsal_index(i,2))*-1)+1)
     sr_h = similarity_matrix(related_index_h,related_index_h); % get pairwise similarities between them
+    sr_h = sr_h(boolean(triu(ones(size(sr_h)),1)))
+
     sur_h = similarity_matrix(related_index_h,unrelated_index_h)
     sim_related = sr_h(:); clear sr_h
     sim_unrelated = sur_h(:); clear sur_h
-    sim_related(sim_related == 1) = []; % remove self-self comparisons
     dorsal_postsynaptic_similarity{i} = sim_related(:); 
     dorsal_postsynaptic_similarity_unrelated{i} = sim_unrelated(:); clear sim_related and related_index_h and sim_unrelated and unrelated_index_h
 end
@@ -198,10 +199,11 @@ for i = 1:length(ventral_index.DV_Index)
     related_index_h = ismember(ventral_an(:,[2,4]),ventral_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(ventral_an(:,4),ventral_index(i,2))*-1)+1);
     sr_h = similarity_matrix(related_index_h,related_index_h); % get pairwise similarities between them
+    sr_h = sr_h(boolean(triu(ones(size(sr_h)),1)))
+  
     sur_h = similarity_matrix(related_index_h,unrelated_index_h);
     sim_related = sr_h(:); clear sr_h
     sim_unrelated = sur_h(:); clear sur_h
-    sim_related(sim_related == 1) = []; % remove self-self comparisons
     ventral_presynaptic_similarity{i} = sim_related(:); 
     ventral_presynaptic_similarity_unrelated{i} = sim_unrelated(:);clear sim_related and related_index_h and sim_unrelated and unrelated_index_h
 end
@@ -213,10 +215,12 @@ for i = 1:length(ventral_index.DV_Index)
     related_index_h = ismember(ventral_an(:,[2,4]),ventral_index(i,:),'rows'); % Find neurons in hemilineage i
     unrelated_index_h = boolean((ismember(ventral_an(:,4),ventral_index(i,2))*-1)+1);
     sr_h = similarity_matrix(related_index_h,related_index_h); % get pairwise similarities between them
+    sr_h = sr_h(boolean(triu(ones(size(sr_h)),1)))
+
+    
     sur_h = similarity_matrix(related_index_h,unrelated_index_h);
     sim_related = sr_h(:); clear sr_h
     sim_unrelated = sur_h(:); clear sur_h
-    sim_related(sim_related == 1) = []; % remove self-self comparisons
     ventral_postsynaptic_similarity{i} = sim_related(:); 
     ventral_postsynaptic_similarity_unrelated{i} = sim_unrelated(:);clear sim_related and related_index_h and sim_unrelated and unrelated_index_h
 end
@@ -235,29 +239,52 @@ ventral_postsynaptic = cat(1,ventral_postsynaptic_similarity{:})
 ventral_postsynaptic_unrelated = cat(1,ventral_postsynaptic_similarity_unrelated{:})
 
 %%
+
 figure; hold on
-bar(1,nanmean(dorsal_presynaptic_unrelated),'FaceColor','k')
-errorbar(1,nanmean(dorsal_presynaptic_unrelated),nanstd(dorsal_presynaptic_unrelated)/sqrt(numel(dorsal_presynaptic_unrelated)),'k')
-bar(2,nanmean(dorsal_presynaptic),'FaceColor','b')
-errorbar(2,nanmean(dorsal_presynaptic),nanstd(dorsal_presynaptic)/sqrt(numel(dorsal_presynaptic)),'k')
+%bar(1,nanmean(dorsal_presynaptic_unrelated),'FaceColor','r')
+%scatter(ones(length(dorsal_presynaptic_unrelated),1),dorsal_presynaptic_unrelated,800,'MarkerFaceColor',[0 0 0],'MarkerEdgeColor',[0 0 0], 'MarkerFaceAlpha', .05 , 'MarkerEdgeAlpha', .15)
+%errorbar(1,nanmean(dorsal_presynaptic_unrelated),nanstd(dorsal_presynaptic_unrelated)/sqrt(numel(dorsal_presynaptic_unrelated)),'r')
+Violin(dorsal_presynaptic_unrelated,1,'ViolinColor',[0 0 0],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+
+%bar(2,nanmean(dorsal_presynaptic),'FaceColor','b')
+%scatter(ones(length(dorsal_presynaptic),1)+1,dorsal_presynaptic,800,'MarkerFaceColor','b','MarkerEdgeColor','b', 'MarkerFaceAlpha', .25 , 'MarkerEdgeAlpha', .75)
+%errorbar(2,nanmean(dorsal_presynaptic),nanstd(dorsal_presynaptic)/sqrt(numel(dorsal_presynaptic)),'r')
+Violin(dorsal_presynaptic,2,'ViolinColor',[0 0 1],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
 [p_d_pre,h] = ranksum(dorsal_presynaptic,dorsal_presynaptic_unrelated)
 
-bar(7,nanmean(dorsal_postsynaptic_unrelated),'FaceColor','k')
-errorbar(7,nanmean(dorsal_postsynaptic_unrelated),std(dorsal_postsynaptic_unrelated)/sqrt(numel(dorsal_postsynaptic_unrelated)),'k')
-bar(8,nanmean(dorsal_postsynaptic),'FaceColor',[0.9255    0.3765    0.0471])
-errorbar(8,nanmean(dorsal_postsynaptic),nanstd(dorsal_postsynaptic)/sqrt(numel(dorsal_postsynaptic)),'k')
+%bar(7,nanmean(dorsal_postsynaptic_unrelated),'FaceColor','r')
+%scatter(ones(length(dorsal_postsynaptic_unrelated),1)+6,dorsal_postsynaptic_unrelated,800,'MarkerFaceColor',[0 0 0],'MarkerEdgeColor',[0 0 0], 'MarkerFaceAlpha', .05 , 'MarkerEdgeAlpha', .15)
+%errorbar(7,nanmean(dorsal_postsynaptic_unrelated),std(dorsal_postsynaptic_unrelated)/sqrt(numel(dorsal_postsynaptic_unrelated)),'r')
+Violin(dorsal_postsynaptic_unrelated,7,'ViolinColor',[0 0 0],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+%bar(8,nanmean(dorsal_postsynaptic),'FaceColor',[0.9255    0.3765    0.0471])
+%scatter(ones(length(dorsal_postsynaptic),1)+7,dorsal_postsynaptic,800,'MarkerFaceColor',[0.9255    0.3765    0.0471],'MarkerEdgeColor',[0.9255    0.3765    0.0471], 'MarkerFaceAlpha', .25 , 'MarkerEdgeAlpha', .75)
+%errorbar(8,nanmean(dorsal_postsynaptic),nanstd(dorsal_postsynaptic)/sqrt(numel(dorsal_postsynaptic)),'r')
+Violin(dorsal_postsynaptic,8,'ViolinColor',[0.9255    0.3765    0.0471],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
 [p_d_post,h] = ranksum(dorsal_postsynaptic,dorsal_postsynaptic_unrelated)
 
-bar(4,nanmean(ventral_presynaptic_unrelated),'FaceColor','k')
-errorbar(4,nanmean(ventral_presynaptic_unrelated),std(ventral_presynaptic_unrelated)/sqrt(numel(ventral_presynaptic_unrelated)),'k')
-bar(5,nanmean(ventral_presynaptic),'FaceColor','b')
-errorbar(5,nanmean(ventral_presynaptic),nanstd(ventral_presynaptic)/sqrt(numel(ventral_presynaptic)),'k')
+%bar(4,nanmean(ventral_presynaptic_unrelated),'FaceColor','r')
+%scatter(ones(length(ventral_presynaptic_unrelated),1)+3,ventral_presynaptic_unrelated,800,'MarkerFaceColor',[0 0 0],'MarkerEdgeColor',[0 0 0], 'MarkerFaceAlpha', .05 , 'MarkerEdgeAlpha', .15)
+%errorbar(4,nanmean(ventral_presynaptic_unrelated),std(ventral_presynaptic_unrelated)/sqrt(numel(ventral_presynaptic_unrelated)),'r')
+Violin(ventral_presynaptic_unrelated,4,'ViolinColor',[0 0 0],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+%bar(5,nanmean(ventral_presynaptic),'FaceColor','b')
+%scatter(ones(length(ventral_presynaptic),1)+4,ventral_presynaptic,800,'MarkerFaceColor','b','MarkerEdgeColor','b', 'MarkerFaceAlpha', .25 , 'MarkerEdgeAlpha', .75)
+%errorbar(5,nanmean(ventral_presynaptic),nanstd(ventral_presynaptic)/sqrt(numel(ventral_presynaptic)),'r')
+Violin(ventral_presynaptic,5,'ViolinColor',[0 0 1],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
 [p_v_pre,h] = ranksum(ventral_presynaptic,ventral_presynaptic_unrelated)
 
-bar(10,nanmean(ventral_postsynaptic_unrelated),'FaceColor','k')
-errorbar(10,nanmean(ventral_postsynaptic_unrelated),std(ventral_postsynaptic_unrelated)/sqrt(numel(ventral_postsynaptic_unrelated)),'k')
-bar(11,nanmean(ventral_postsynaptic),'FaceColor',[0.9255    0.3765    0.0471])
-errorbar(11,nanmean(ventral_postsynaptic),std(ventral_postsynaptic)/sqrt(numel(ventral_postsynaptic)),'k')
+%bar(10,nanmean(ventral_postsynaptic_unrelated),'FaceColor','r')
+%scatter(ones(length(ventral_postsynaptic_unrelated),1)+9,ventral_postsynaptic_unrelated,800,'MarkerFaceColor',[0 0 0],'MarkerEdgeColor',[0 0 0], 'MarkerFaceAlpha', .05 , 'MarkerEdgeAlpha', .15)
+%errorbar(10,nanmean(ventral_postsynaptic_unrelated),std(ventral_postsynaptic_unrelated)/sqrt(numel(ventral_postsynaptic_unrelated)),'r')
+Violin(ventral_postsynaptic_unrelated,10,'ViolinColor',[0 0 0],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+%bar(11,nanmean(ventral_postsynaptic),'FaceColor',[0.9255    0.3765    0.0471])
+%scatter(ones(length(ventral_postsynaptic),1)+10,ventral_postsynaptic,800,'MarkerFaceColor',[0.9255    0.3765    0.0471],'MarkerEdgeColor',[0.9255    0.3765    0.0471], 'MarkerFaceAlpha', .25 , 'MarkerEdgeAlpha', .75)
+%errorbar(11,nanmean(ventral_postsynaptic),std(ventral_postsynaptic)/sqrt(numel(ventral_postsynaptic)),'r')
+Violin(ventral_postsynaptic,11,'ViolinColor',[0.9255    0.3765    0.0471],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
 [p_v_post,h] = ranksum(ventral_postsynaptic,ventral_postsynaptic_unrelated)
 
 xticks([1.5,4.5,7.5,10.5])
