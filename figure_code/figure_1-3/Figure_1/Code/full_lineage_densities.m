@@ -1,7 +1,11 @@
 load mark2020_neurons.mat
 %% Parse lineages 
-lineages = arrayfun(@(x) nl(an_in.Lineage_Index == x), 1:max(an_in.Lineage_Index),'UniformOutput',false)
-lineages(cellfun(@isempty, lineages)) = []
+unique_lineages = unique(an_in(:,[4,5]))
+[~,left_lin_index] = ismember(an_in(:,[4,5]),unique_lineages(1:2:end,:),'rows')
+
+lineages = arrayfun(@(x) nl(left_lin_index == x),1:max(left_lin_index),'UniformOutput',false)
+%lineages = arrayfun(@(x) nl(an_in.Lineage_Index == x), 1:max(an_in.Lineage_Index),'UniformOutput',false)
+%lineages(cellfun(@isempty, lineages)) = []
 lineage_legend = unique(an_in.Lineage)
 
 %%
@@ -55,4 +59,22 @@ if savefigs == 1
         saveas(gcf,string(strcat(directory,'/','Individual_Presynaptic_Density.svg')),'svg')
     close all
     else
-    end
+end
+    
+%%
+% Plot individual 75% synapse density contours.
+figure('pos',[1,1,1800,400],'rend','painters'); hold on
+for i = 1:length(lineages)
+    subplot(1,7,i)
+    synapse_density_contours(lineages{i},'r',2,1,1,75) % Generate presynapse density contours for each hemilineage. Threshold is 75%, 1contour line. 
+    surfaces2D([NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,1),NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,2)],'k',.05,'-')    
+    axis off
+    axis equal
+    title(strcat('Postsynaptic Density',lineage_legend{i}))
+    
+end
+if savefigs == 1
+        saveas(gcf,string(strcat(directory,'/','Individual_Postsynaptic_Density.svg')),'svg')
+    close all
+    
+end
