@@ -80,3 +80,8 @@ ylim([0 1])
 xticklabels({'Random','Temporal','Random','Temporal','Random','Temporal','Random','Temporal'})
 ylabel('Synapse Similarity')
 set(gca,'FontSize',18)
+
+pvals.postV = ranksum(temp_postV,rand_postV)
+pvals.preV = ranksum(temp_preV,rand_preV)
+pvals.postD = ranksum(temp_postD,rand_postD)
+pvals.preD = ranksum(temp_preD,rand_preD)
