@@ -5,14 +5,18 @@ function [cohorts,t] = get_temporal_cohorts_by_cell_body(lineage,cutoff,bilatera
 % clustered together.
 % Inputs:
 %           lineage: a neuron list, either a lineage or hemilineage.
+%           
 %           cutoff: a cutoff for defining cell body clusters. The function
 %           will measure the distance between cell bodies and cluster them.
 %           The cutoff defines the clusters.
+%
 %           bilateral: If the neurons in the lineage neuron list are
 %           left/right homologs, it will do everything on the left and
 %           right separately, then average the outputs.
+%
 %           normalization: normalizes the cortex neurite length to the
 %           width of the cortex where the lineage is. (DOESN'T WORK WELL)
+%
 %           limits: edges for the temporal cohort assignments.
 
     if  nargin>2 & bilateral == 1

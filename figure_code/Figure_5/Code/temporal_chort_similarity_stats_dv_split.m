@@ -20,7 +20,10 @@ if contains(d_v,'dorsal')
 elseif contains(d_v,'ventral')
     nl_to_test = ventral_neurons
     an_to_test = an_ventral
-else errot('wrong d/v input')
+elseif contains(d_v,'all')
+    nl_to_test = nl
+    an_to_test = an_in
+else erro('wrong d/v input')
 end
 
 
@@ -43,13 +46,14 @@ figure; hold on; histogram(presim,[0:.1:1],'Normalization','probability'); histo
 
 % Define which similarity matrix to use
 %similarity_matrix = corrcov(presim_mat_l-presim_mat_r)
-to_use = 'pre'
+to_use = 'post'
 
 if contains(to_use,'pre')
     similarity_matrix = presim;
 elseif contains(to_use,'post')
     similarity_matrix = postsim;
 end
+
 
 % Unrelated neurons: Neurons not related by lineage or birth order
 
@@ -187,34 +191,40 @@ temp_cohort_sim(isnan(temp_cohort_sim)) = []
 [p_hemilineage_vs_temporal,h,stat] = ranksum(temporal_sim,hemi_sim)
 [p_hemilineage_vs_temporal_cohort,h,stat] = ranksum(hemi_sim,temp_cohort_sim)
 
-figure('Position',[0 100 900 500]); hold on
-% Unrelated neurons
-%bar(1,nanmean(temporal_unrelated),'FaceColor',[0 0 0])
-scatter(ones(length(temporal_unrelated),1),temporal_unrelated,800,'MarkerFaceColor',[0 0 0],'MarkerEdgeColor',[0 0 0], 'MarkerFaceAlpha', .05 , 'MarkerEdgeAlpha', .15)
-errorbar(1,nanmean(temporal_unrelated),nanstd(temporal_unrelated)/sqrt(numel(temporal_unrelated)),'k','vertical','LineWidth',3)
+figure('Units','inches','Position',[0 1 5 4.7]); hold on
+% Unrelated
 
-% Temporal cohorts
-%bar(2,nanmean(temporal_sim),'FaceColor',map(1,:))
-scatter(ones(length(temporal_sim),1)+1,temporal_sim,800,'MarkerFaceColor',map(1,:),'MarkerEdgeColor',map(1,:)*.8, 'MarkerFaceAlpha', .25 , 'MarkerEdgeAlpha', .75)
-errorbar(2,nanmean(temporal_sim),nanstd(temporal_sim)/sqrt(numel(temporal_sim)),'k','vertical','LineWidth',3)
-
-%Hemilineages
-%bar(3,nanmean(hemi_sim),'FaceColor',map(2,:))
-scatter(ones(length(hemi_sim),1)+2,hemi_sim,800,'MarkerFaceColor',map(2,:),'MarkerEdgeColor',map(2,:)*.8, 'MarkerFaceAlpha', .25 , 'MarkerEdgeAlpha', .75)
-errorbar(3,nanmean(hemi_sim),nanstd(hemi_sim)/sqrt(numel(hemi_sim)),'k','vertical','LineWidth',3)
-
-% Temporal cohorts of hemilineages
-%bar(4,nanmean(temp_cohort_sim),'FaceColor',map(3,:))
-scatter(ones(length(temp_cohort_sim),1)+3,temp_cohort_sim,800,'MarkerFaceColor',map(3,:),'MarkerEdgeColor',map(3,:)*.8, 'MarkerFaceAlpha', .25 , 'MarkerEdgeAlpha', .75)
-errorbar(4,nanmean(temp_cohort_sim),nanstd(temp_cohort_sim)/sqrt(numel(temp_cohort_sim)),'k','vertical','LineWidth',3)
+%barh(1,nanmean(temporal_unrelated),'FaceColor',[0 0 0])
+%errorbar(nanmean(temporal_unrelated),1,nanstd(temporal_unrelated)/sqrt(numel(temporal_unrelated)),'k','horizontal')
+Violin(temporal_unrelated,1,'ViolinColor',[0,0,0],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
 
 
-xticks([1 2 3 4])
-xlim([0 5])
+% Temporally related
+%barh(2,nanmean(temporal_sim),'FaceColor',[.25 .25 .25])
+%errorbar(nanmean(temporal_sim),2,nanstd(temporal_sim)/sqrt(numel(temporal_sim)),'k','horizontal')
+%Violin(temporal_sim,2,'ViolinColor',map(1,:),'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+
+% Hemilineage Related
+
+%barh(3,nanmean(hemi_sim),'FaceColor',[.5 .5 .5])
+%errorbar(nanmean(hemi_sim),3,nanstd(hemi_sim)/sqrt(numel(hemi_sim)),'k','horizontal')
+Violin(hemi_sim,2,'ViolinColor',map(2,:),'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+
+%Temporal Cohort Related
+
+%barh(4,nanmean(temp_cohort_sim),'FaceColor',[.75 .75 .75])
+%errorbar(nanmean(temp_cohort_sim),4,nanstd(temp_cohort_sim)/sqrt(numel(temp_cohort_sim)),'k','horizontal')
+Violin(temp_cohort_sim,3,'ViolinColor',map(3,:),'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+
+xticks([1 2 3])
+xlim([0 4])
 ylim([0 1])
-xticklabels({'Random','Temporal','Hemilineage','HL-Temporal Cohort'})
+xticklabels({'Random','Hemilineage','HL-Temporal Cohort'})
 ylabel('Synapse Similarity')
-set(gca,'FontSize',18)
+set(gca,'FontSize',12)
 
 
 
@@ -237,6 +247,12 @@ set(gca,'FontSize',18)
 %histogram(hemi_sim,0:.1:1,'Normalization','probability','FaceColor',map(1,:),'FaceAlpha',.5)
 %histogram(temporal_unrelated,0:.1:1,'Normalization','probability','FaceColor','k','FaceAlpha',.1)
 
+
+similarity_data.Random = temporal_unrelated;
+similarity_data.Temporal = temporal_sim;
+similarity_data.Hemilineage = hemi_sim;
+similarity_data.Temporal_Cohort = temp_cohort_sim;
+save('Synapse_similarity_Pre','similarity_data')
 %%
 covmap = flipud(cbrewer('seq','YlOrRd',64))
 lr_cov = cov(presim_mat_l - presim_mat_r)

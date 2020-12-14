@@ -1,14 +1,16 @@
+%% Generate lineage synapse densities
+
+% load dataset
 load mark2020_neurons.mat
-%% Parse lineages 
+
+% Parse lineages by lineage index and side index
 unique_lineages = unique(an_in(:,[4,5]))
 [~,left_lin_index] = ismember(an_in(:,[4,5]),unique_lineages(1:2:end,:),'rows')
 
 lineages = arrayfun(@(x) nl(left_lin_index == x),1:max(left_lin_index),'UniformOutput',false)
-%lineages = arrayfun(@(x) nl(an_in.Lineage_Index == x), 1:max(an_in.Lineage_Index),'UniformOutput',false)
-%lineages(cellfun(@isempty, lineages)) = []
 lineage_legend = unique(an_in.Lineage)
 
-%%
+
 % Load neuropil bounds and rotate to correct for offset.
 map = hsv(7)
 load Neuropil_Mesh_Object.mat
@@ -28,7 +30,7 @@ else
     directory = 0
 end
 
-% Plot 90% synapse density contours together.
+%% Plot 90% synapse density contours together.
 
 figure('pos',[1,1,1200,1200],'rend','painters'); hold on
 surfaces2D([NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,1),NPM.vertices(NPM.vertices(:,3)> 105550 & NPM.vertices(:,3)< 144000,2)],'k',.05,'-')    
@@ -44,6 +46,7 @@ for i = 1:length(lineages)
     end
 end
 
+%%
 % Plot individual 75% synapse density contours.
 figure('pos',[1,1,1800,400],'rend','painters'); hold on
 for i = 1:length(lineages)

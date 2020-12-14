@@ -35,7 +35,7 @@ nl_half_skids = [nl(1:2:end).SkIDs];
 %% Get the similarity scores for all neurons related by birthdate, hemilineage, or temporal cohort
 
 % Define which similarity matrix to use
-similarity_matrix = postsim
+similarity_matrix = presim
 
 % Temporal
 temporal_index = unique(an_half(:,6)); % Possible temporal cohorts
@@ -111,14 +111,23 @@ nanmean(hemi_sim)
 nanmean(temporal_sim)
 
 figure; hold on
-barh(1,nanmean(temporal_unrelated),'FaceColor',[0 0 0])
-errorbar(nanmean(temporal_unrelated),1,nanstd(temporal_unrelated)/sqrt(numel(temporal_unrelated)),'k','horizontal')
-barh(2,nanmean(temporal_sim),'FaceColor',[.25 .25 .25])
-errorbar(nanmean(temporal_sim),2,nanstd(temporal_sim)/sqrt(numel(temporal_sim)),'k','horizontal')
-barh(3,nanmean(hemi_sim),'FaceColor',[.5 .5 .5])
-errorbar(nanmean(hemi_sim),3,nanstd(hemi_sim)/sqrt(numel(hemi_sim)),'k','horizontal')
-barh(4,nanmean(temp_cohort_sim),'FaceColor',[.75 .75 .75])
-errorbar(nanmean(temp_cohort_sim),4,nanstd(temp_cohort_sim)/sqrt(numel(temp_cohort_sim)),'k','horizontal')
+%barh(1,nanmean(temporal_unrelated),'FaceColor',[0 0 0])
+%errorbar(nanmean(temporal_unrelated),1,nanstd(temporal_unrelated)/sqrt(numel(temporal_unrelated)),'k','horizontal')
+Violin(temporal_unrelated,1,'ViolinColor',[0,0,0],'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+%barh(2,nanmean(temporal_sim),'FaceColor',[.25 .25 .25])
+%errorbar(nanmean(temporal_sim),2,nanstd(temporal_sim)/sqrt(numel(temporal_sim)),'k','horizontal')
+Violin(temporal_sim,2,'ViolinColor',map(1,:),'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+%barh(3,nanmean(hemi_sim),'FaceColor',[.5 .5 .5])
+%errorbar(nanmean(hemi_sim),3,nanstd(hemi_sim)/sqrt(numel(hemi_sim)),'k','horizontal')
+Violin(hemi_sim,3,'ViolinColor',map(2,:),'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+%barh(4,nanmean(temp_cohort_sim),'FaceColor',[.75 .75 .75])
+%errorbar(nanmean(temp_cohort_sim),4,nanstd(temp_cohort_sim)/sqrt(numel(temp_cohort_sim)),'k','horizontal')
+Violin(temp_cohort_sim,4,'ViolinColor',map(3,:),'Bandwidth',.05,'EdgeColor',[0,0,0],'BoxColor',[0,0,0])
+
+
 set(gca,'YDir','reverse')
 yticks([1 2 3 4])
 yticklabels({'Random','Temporal','Hemilineage','HL-Temporal Cohort'})
@@ -129,3 +138,12 @@ figure; hold on
 histogram(temp_cohort_sim,0:.05:1,'Normalization','probability')
 histogram(hemi_sim,0:.05:1,'Normalization','probability')
 histogram(temporal_sim,0:.05:1,'Normalization','probability')
+
+
+
+xticks([1 2 3 4])
+xlim([0 5])
+ylim([0 1])
+xticklabels({'Random','Temporal','Hemilineage','HL-Temporal Cohort'})
+ylabel('Input Connectivity Similarity')
+set(gca,'FontSize',18)

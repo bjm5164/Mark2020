@@ -5,4 +5,7 @@
 *.png
 *.jpg
 *.
-/DS_Store
+**/Figures/*
+**/Panels/*
+**/Data/*
+*.DS_Store

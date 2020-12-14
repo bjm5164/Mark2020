@@ -1,4 +1,4 @@
-function [h2 T perm1 Z] = Synapse_Distance_Clustering_v2(sim_mat,Names,clusters,dis_sim)
+function [h2 T perm1 Z] = Synapse_Distance_Clustering_v2(sim_mat,Names,clusters,use_similarity)
 if nargin >= 3
     clusters = clusters;
 else 
@@ -8,11 +8,11 @@ cmap =cbrewer('seq', 'Blues',64)
 
 
 if nargin == 3
-   dis_sim = input('Distance (1) / Similarity (0)')
+   use_similarity = input('Distance (1) / Similarity (0)')
 else
 end
 
-if dis_sim == 1
+if use_similarity == 1
         d_mat = 1-sim_mat;
         dist = squareform(d_mat);  
         mat = d_mat;
