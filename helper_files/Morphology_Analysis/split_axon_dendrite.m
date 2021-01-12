@@ -1,5 +1,5 @@
 function [neuron] = split_axon_dendrite(neuron)
-
+% This function is in development. 
 if isempty(neuron.Outputs.treenodeID) == 0 & isempty(neuron.Inputs.treenodeID) == 0
     % Classify nodes into branches/ends/neither and get a binary adjacency
     % matrix for the skeleton.
