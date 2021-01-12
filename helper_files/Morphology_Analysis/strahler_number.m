@@ -1,6 +1,6 @@
 
 function sn = strahler_number( Neuron )
-
+% Code adapted from: 10.7554/eLife.12059
 sn = zeros( size( Neuron.skeleton_data.Adj_dir,1 ),1);
 
 Adj_dir = spones(Neuron.skeleton_data.Adj_dir);
