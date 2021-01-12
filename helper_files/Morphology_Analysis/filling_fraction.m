@@ -2,7 +2,7 @@ function [filling_fraction,n_real,n_possible] = filling_fraction(pre_neuron,post
 
 % Compute a filling fraction for two neurons.  Default settings are to
 % compare the filling fraction between the presynaptic axon and
-% postsynaptic dendrite. 
+% postsynaptic dendrite. Code adapted from 10.7554/eLife.29089
 
 if exist('density_col','var') == 0
     density_col = 1
@@ -40,6 +40,6 @@ end
 % plot(distance_range(1:end)./1000,ff(1:end),'Marker','o','Color','b','MarkerSize',15,'LineWidth',3)
 % set(gcf,'Color','w')
 % set(gca,'FontSize',18)
-% xlabel('Potential Synapse Radius (µm)')
+% xlabel('Potential Synapse Radius (Âµm)')
 % ylabel('Filling Fraction')
 end
