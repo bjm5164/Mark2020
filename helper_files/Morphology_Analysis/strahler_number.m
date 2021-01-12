@@ -3,17 +3,17 @@ function sn = strahler_number( Neuron )
 
 sn = zeros( size( Neuron.skeleton_data.Adj_dir,1 ),1);
 
-Adir_uw = spones(Neuron.skeleton_data.Adj_dir);
-is_branch = sum(Adir_uw,1)>1;
+Adj_dir = spones(Neuron.skeleton_data.Adj_dir);
+is_branch = sum(Adj_dir,1)>1;
 is_branch = full(is_branch);
-work_inds = find( sum(Adir_uw,1) == 0);
+work_inds = find( sum(Adj_dir,1) == 0);
 
 while ~isempty(work_inds)
     
     rel_ind = work_inds(1);
     work_inds(1) = [];
     
-    ch_inds = find(Adir_uw( :, rel_ind ));
+    ch_inds = find(Adj_dir( :, rel_ind ));
     if isempty(ch_inds)
         sn(rel_ind) = 1;
     elseif length(ch_inds)==1
@@ -26,7 +26,7 @@ while ~isempty(work_inds)
     end
     
     while true
-        rel_ind = find( Adir_uw(rel_ind,:) ); % Look for the parent
+        rel_ind = find( Adj_dir(rel_ind,:) ); % Look for the parent
         
         if isempty(rel_ind)
             break
