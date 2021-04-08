@@ -1,4 +1,4 @@
-load m19_neurons_original.mat
+load mark2020_neurons.mat
 % Parse lineages and hemilineages
 hemilineage_index = unique([an.Lineage_Index,an.DV_Index],'rows')
 
