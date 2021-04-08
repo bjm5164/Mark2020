@@ -110,13 +110,13 @@ hl_index = unique(an_half(:,[2,4]),'rows') % Possible hemilineages
 
 for i = 1:length(hl_index.DV_Index)
     % Find neurons in hemilineage i
-    related_index_h = find(ismember(an_half(:,[2,4]),hl_index(i,:),'rows')); 
+    related_index_h = ismember(an_half(:,[2,4]),hl_index(i,:),'rows'); 
     % get pairwise similarities between them
     sr_h = similarity_matrix(related_index_h,related_index_h); 
  
     % Remove comparisons for temporal cohorts within hemilineages. 
-    for ii = 1:length(related_index_h)
-        for j = 1:length(related_index_h)
+    for ii = 1:sum(related_index_h)
+        for j = 1:sum(related_index_h)
             if an_half.Temporal_Cohort(related_index_h(ii)) == an_half.Temporal_Cohort(related_index_h(j))
                 sr_h(ii,j) = NaN
             end
