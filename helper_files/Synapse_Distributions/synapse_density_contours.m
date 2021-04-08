@@ -143,10 +143,10 @@ if axes_to_use == 1
     %surfaces([NPM.v(NPM.v(:,3)>.9e5,1),NPM.v(NPM.v(:,3)>.9e5,2)],'k',.05,'-');
     mesh_x = axis_lims(1):100:axis_lims(2);
     mesh_y = axis_lims(3):100:axis_lims(4);
-else
-    surfaces(NPM.v(:,[1,3]),'k',.05,'-'); hold on
-    mesh_x = min(NPM.v(:,1)):100:max(NPM.v(:,1));
-    mesh_y = min(NPM.v(:,3)):100:max(NPM.v(:,3));
+elseif axes_to_use == 2
+    surfaces(NPM.vertices(:,[1,3]),'k',.05,'-'); hold on
+    mesh_x = axis_lims(1):1000:axis_lims(2);
+    mesh_y = axis_lims(3):1000:axis_lims(4);
 end
 
 
